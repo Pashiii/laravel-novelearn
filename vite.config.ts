@@ -16,7 +16,8 @@ export default defineConfig({
         wayfinder({
             formVariants: true,
         }),
-    ],
+        process.env.NODE_ENV !== 'production' && wayfinder(),
+    ].filter(Boolean),
     esbuild: {
         jsx: 'automatic',
     },
