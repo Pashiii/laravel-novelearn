@@ -9,7 +9,7 @@ use Inertia\Inertia;
 class PlaylistController extends Controller
 {
     public function index(){
-        $playlists = Playlist::all();
+        $playlists = Playlist::withCount('lesson')->get();
         return Inertia::render('Playlist/Index', compact('playlists'));
     }
 
@@ -22,7 +22,6 @@ class PlaylistController extends Controller
     {
         $validated = $request->validate([
             'course_id' => 'required|string|max:100',
-            'tutor_id' => 'required|string|max:100',
             'title' => 'required|string|max:100',
             'description' => 'required|string|max:1000',
             'thumb' => 'nullable|file|image|max:3072',
@@ -30,9 +29,16 @@ class PlaylistController extends Controller
         ]);
     
         if ($request->hasFile('thumb')) {
-            $validated['thumb'] = $request->file('thumb')->store('thumbnails', 'public');
+            $file = $request->file('thumb');
+        
+            if ($file->isValid()) {
+                $validated['thumb'] = Storage::disk('s3')->url(
+                    $request->file('thumb')->store('thumbnails', 's3')
+                );
+            } else {
+                return back()->withErrors(['thumb' => 'Uploaded file is invalid']);
+            }
         }
-    
         Playlist::create($validated);
     
         return redirect()->route('playlist.index')
@@ -41,14 +47,21 @@ class PlaylistController extends Controller
     
     public function destroy($id){
         $playlist = Playlist::findOrFail($id);
-        if ($playlist->thumb && Storage::disk('public')->exists($playlist->thumb)) {
-            Storage::disk('public')->delete($playlist->thumb);
-        }
-        foreach ($playlist->lesson as $lesson) {
-            if ($lesson->thumb && Storage::disk('public')->exists($lesson->thumb)) {
-                Storage::disk('public')->delete($lesson->thumb);
+        if ($playlist->thumb) {
+            $path = str_replace(env('AWS_URL') . '/', '', $playlist->thumb);
+            if (Storage::disk('s3')->exists($path)) {
+                Storage::disk('s3')->delete($path);
             }
         }
+        foreach ($playlist->lesson as $lesson) {
+            if ($lesson->thumb) {
+                $path = str_replace(env('AWS_URL') . '/', '', $lesson->thumb);
+                if (Storage::disk('s3')->exists($path)) {
+                    Storage::disk('s3')->delete($path);
+                }
+            }
+        }
+    
     
         $playlist->delete();
         return redirect()->route('playlist.index')->with('message', 'Playlist deleted sucessfully!');
@@ -61,11 +74,14 @@ class PlaylistController extends Controller
             'hours' => 'required|numeric',
         ]);
         if ($request->hasFile('thumb')) {
-            if ($playlist->thumb && Storage::disk('public')->exists($playlist->thumb)) {
-                Storage::disk('public')->delete($playlist->thumb);
-            }
-    
-            $validated['thumb'] = $request->file('thumb')->store('thumbnails', 'public');
+            if ($playlist->thumb) {
+                if(Storage::disk('s3')->exists($playlist->thumb)){
+                    Storage::disk('s3')->delete($playlist->thumb);
+                };
+            }  
+            $validated['thumb'] = Storage::disk('s3')->url(
+                $request->file('thumb')->store('thumbnails', 's3')
+            );        
         } else {
             $validated['thumb'] = $playlist->thumb;
         }

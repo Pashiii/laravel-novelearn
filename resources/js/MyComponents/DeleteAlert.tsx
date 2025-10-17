@@ -11,14 +11,18 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Playlists } from '@/types';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
+interface DataProps {
+    id: number;
+    title: string;
+}
+
 interface Props {
-    data: Playlists;
+    data: DataProps;
     routeName: string;
     params?: Record<string, any>;
     className?: string;
@@ -28,11 +32,12 @@ export const DeleteAlert: React.FC<Props> = ({
     data,
     routeName,
     className,
+    params,
 }) => {
     const { delete: destroy } = useForm();
 
     const handleDelete = (id: number) => {
-        destroy(route(routeName, { id: data.id }), {
+        destroy(route(routeName, params ?? { id: data.id }), {
             onSuccess: () => {
                 toast.success('Deleted successfully!');
             },

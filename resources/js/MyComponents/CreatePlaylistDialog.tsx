@@ -7,6 +7,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,30 +17,21 @@ import React, { useEffect } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
-interface Props {
-    isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export const CreatePlaylistDialog: React.FC<Props> = ({
-    isOpen,
-    setIsOpen,
-}) => {
+export const CreatePlaylistDialog = () => {
     const { data, setData, post, processing, reset, errors } = useForm({
         course_id: '',
-        tutor_id: '1',
         title: '',
         description: '',
         thumb: null as File | null,
         hours: '',
     });
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         post(route('playlist.store'), {
             forceFormData: true,
             onSuccess: () => {
                 reset();
-                setIsOpen(false);
                 toast.success('Course created successfully!');
             },
         });
@@ -50,9 +42,14 @@ export const CreatePlaylistDialog: React.FC<Props> = ({
         const short = id.replace(/-/g, '').slice(0, 14);
         const courseID = 'CRS-' + short;
         setData('course_id', courseID);
-    }, [isOpen]);
+    }, []);
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button className="bg-green-900 px-10 py-6 text-sm text-white">
+                    Add Course
+                </Button>
+            </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Create Course</DialogTitle>
@@ -64,14 +61,6 @@ export const CreatePlaylistDialog: React.FC<Props> = ({
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="grid gap-4">
                     <div className="grid gap-3">
-                        <Input
-                            id="tutorId"
-                            name="tutorId"
-                            value={data.tutor_id}
-                            onChange={(e) => setData('tutor_id', '1')}
-                            hidden
-                            readOnly
-                        />
                         <Label htmlFor="courseId">
                             Course ID
                             <span className="ml-1 text-red-600">*</span>

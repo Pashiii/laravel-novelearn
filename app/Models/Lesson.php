@@ -18,4 +18,8 @@ class Lesson extends Model
     public function playlist(){
         return $this->belongsTo(Playlist::class);
     }
+
+        public function sublesson(){
+        return $this->hasMany(SubLesson::class);
+    }
 }

@@ -3,12 +3,12 @@ import { LucideIcon } from 'lucide-react';
 
 export interface Playlists {
     id: number;
-
     title: string;
     description: string;
     thumb: string;
     hours: number;
     created_at: string;
+    lesson_count: number;
 }
 export interface Lesson {
     id: number;
@@ -16,8 +16,20 @@ export interface Lesson {
     title: string;
     description?: string;
     thumb?: string;
-    created_at: string;
-    updated_at: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface SubLesson{
+    id: number;
+    lesson_id: number;
+    title: string;
+    instruction?: string;
+    thumb?: string;
+    files?: string[];
+    type: string;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export interface Auth {

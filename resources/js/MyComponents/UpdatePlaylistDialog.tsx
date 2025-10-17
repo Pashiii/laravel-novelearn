@@ -11,22 +11,22 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { Playlists } from '@/types';
 import { useForm } from '@inertiajs/react';
-import React, { useEffect } from 'react';
+import { DialogTrigger } from '@radix-ui/react-dialog';
+import React, { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
 interface Props {
-    isEditing: boolean;
-    setIsEditing: (open: boolean) => void;
     playlist: Playlists | null;
+    className?: string;
 }
 
 export const UpdatePlaylistDialog: React.FC<Props> = ({
-    isEditing,
-    setIsEditing,
     playlist,
+    className,
 }) => {
     const { data, setData, post, processing, reset, errors } = useForm({
         _method: 'PUT',
@@ -35,6 +35,9 @@ export const UpdatePlaylistDialog: React.FC<Props> = ({
         thumb: null as File | null,
         hours: '',
     });
+
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!playlist) return;
@@ -43,7 +46,7 @@ export const UpdatePlaylistDialog: React.FC<Props> = ({
             forceFormData: true,
             onSuccess: () => {
                 reset();
-                setIsEditing(false);
+                closeButtonRef.current?.click();
                 toast.success('Course updated successfully!');
             },
         });
@@ -59,7 +62,12 @@ export const UpdatePlaylistDialog: React.FC<Props> = ({
         }
     }, [playlist, setData]);
     return (
-        <Dialog open={isEditing} onOpenChange={setIsEditing}>
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button className={cn('bg-orange-400 text-white', className)}>
+                    Update
+                </Button>
+            </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Update Course</DialogTitle>
@@ -153,6 +161,7 @@ export const UpdatePlaylistDialog: React.FC<Props> = ({
                         <DialogClose asChild>
                             <Button
                                 type="button"
+                                ref={closeButtonRef}
                                 variant="outline"
                                 className="bg-red-500 text-white"
                             >
@@ -164,7 +173,7 @@ export const UpdatePlaylistDialog: React.FC<Props> = ({
                             className="bg-green-900 text-white"
                             disabled={processing}
                         >
-                            Create Course
+                            Update Course
                         </Button>
                     </DialogFooter>
                 </form>

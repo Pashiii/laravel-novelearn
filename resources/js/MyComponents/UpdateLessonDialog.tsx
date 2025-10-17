@@ -12,61 +12,63 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
-import { Lesson, Playlists } from '@/types';
+import { Lesson } from '@/types';
 import { useForm } from '@inertiajs/react';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
 interface Props {
-    playlist: Playlists;
-    lesson: Lesson[];
-    className?: string;
+    lesson: Lesson;
 }
 
-export const CreateLessonDialog: React.FC<Props> = ({
-    playlist,
-    lesson,
-    className,
-}) => {
+export const UpdateLessonDialog: React.FC<Props> = ({ lesson }) => {
     const { data, setData, post, processing, reset, errors } = useForm({
+        _method: 'PUT',
         title: '',
         description: '',
         thumb: null as File | null,
     });
 
     const closeButtonRef = useRef<HTMLButtonElement>(null);
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        post(route('lesson.store', { playlist: playlist.id }), {
-            forceFormData: true,
-            onSuccess: () => {
-                reset();
-                closeButtonRef.current?.click();
-                toast.success('Lesson created successfully!');
+        post(
+            route('lesson.update', {
+                playlist: lesson.playlist_id,
+                lesson: lesson.id,
+            }),
+            {
+                forceFormData: true,
+                onSuccess: () => {
+                    toast.success('Lesson updated successfully!');
+                    reset();
+                    closeButtonRef.current?.click();
+                },
+                onError: () => {
+                    toast.error('Failed to update!');
+                },
             },
-            onError: () => {
-                toast.error('Failed to created!');
-            },
-        });
+        );
     };
+
+    useEffect(() => {
+        if (lesson) {
+            setData({
+                title: lesson.title,
+                description: lesson.description,
+            });
+        }
+    }, [lesson, setData]);
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button
-                    className={cn(
-                        'h-11 w-full bg-green-900 text-lg text-white',
-                        className,
-                    )}
-                >
-                    Add New Lesson
-                </Button>
+                <Button className="bg-orange-400 text-white">Update</Button>
             </DialogTrigger>
-
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Create Lesson</DialogTitle>
+                    <DialogTitle>Update Lesson</DialogTitle>
                     <DialogDescription>
                         Fill out the form below to create a new course. Make
                         sure all required fields are completed before
@@ -74,25 +76,6 @@ export const CreateLessonDialog: React.FC<Props> = ({
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="grid gap-4">
-                    <div className="grid gap-3">
-                        <Label htmlFor="course_title">Lesson Number</Label>
-                        <Input
-                            id="course_title"
-                            name="course_title"
-                            readOnly
-                            value={lesson.length ? lesson.length + 1 : 1}
-                        />
-                    </div>
-                    <div className="grid gap-3">
-                        <Label htmlFor="course_title">Course Title</Label>
-
-                        <Input
-                            id="course_title"
-                            name="course_title"
-                            value={playlist.title}
-                            readOnly
-                        />
-                    </div>
                     <div className="grid gap-3">
                         <Label htmlFor="title">
                             Lesson Title
@@ -150,9 +133,9 @@ export const CreateLessonDialog: React.FC<Props> = ({
                         <DialogClose asChild>
                             <Button
                                 type="button"
+                                ref={closeButtonRef}
                                 variant="outline"
                                 className="bg-red-500 text-white"
-                                ref={closeButtonRef}
                             >
                                 Cancel
                             </Button>
@@ -162,7 +145,7 @@ export const CreateLessonDialog: React.FC<Props> = ({
                             className="bg-green-900 text-white"
                             disabled={processing}
                         >
-                            Create Course
+                            Update Course
                         </Button>
                     </DialogFooter>
                 </form>

@@ -11,7 +11,8 @@ use Inertia\Inertia;
 class LessonController extends Controller
 {
     public function index(Playlist $playlist){
-        $lessons = $playlist->lesson()->latest()->get();
+        $playlist->loadCount('lesson'); // adds $playlist->lesson_count
+        $lessons = $playlist->lesson()->latest()->paginate(9);
         return Inertia::render('Playlist/ViewPlaylist', [
             'playlist' => $playlist,
             'lessons' =>  $lessons,
@@ -25,12 +26,25 @@ class LessonController extends Controller
             'thumb' => 'nullable|image|max:2040'
         ]);
         if ($request->hasFile('thumb')) {
-            $validated['thumb'] = $request->file('thumb')->store('lessons', 'public');
+            $validated['thumb'] = Storage::disk('s3')->url(
+                $request->file('thumb')->store('thumbnails', 's3')
+            );
         }
 
         $validated['playlist_id'] = $playlist->id;
         Lesson::create($validated);
         return redirect()->back()->with('success', 'Lesson created successfully!');
+    }
+
+    public function destroy(Playlist $playlist, $id) {
+        $lesson = $playlist->lesson()->findOrFail($id);
+        if ($lesson->thumb && Storage::disk('s3')->exists($lesson->thumb)) {
+            Storage::disk('s3')->delete($lesson->thumb);
+        }
+    
+
+        $lesson->delete();
+        return redirect()->route('lesson.index', ['playlist' => $playlist->id] )->with('message', 'Lesson deleted sucessfully!');
     }
 
     public function update(Request $request, Playlist $playlist, Lesson $lesson){
@@ -41,11 +55,14 @@ class LessonController extends Controller
         ]);
 
         if ($request->hasFile('thumb')) {
-            if($lesson->thumb && Storage::disk('public')->exists($lesson->thumb)){
-                Storage::disk('public')->delete($lesson->thumb);
-            }
-            $validated['thumb'] = $request->file('thumb')->store('lessons', 'public');
-        }else{
+            if ($lesson->thumb) {
+                if(Storage::disk('s3')->exists($lesson->thumb)){
+                    Storage::disk('s3')->delete($lesson->thumb);
+                };
+            }  
+            $validated['thumb'] = Storage::disk('s3')->url(
+                $request->file('thumb')->store('thumbnails', 's3')
+            );        }else{
             $validated['thumb'] = $lesson->thumb;
         }
 

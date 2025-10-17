@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('playlists', function (Blueprint $table) {
+        Schema::create('sub_lessons', function (Blueprint $table) {
             $table->id();
-            $table->string('course_id')->unique();
+            $table->foreignId('lesson_id')->constrained('lessons')->onDelete('cascade');
+            $table->enum('type', ['activity', 'exam', 'material']);
             $table->string('title');
-            $table->text('description')->nullable();
             $table->string('thumb')->nullable();
-            $table->integer('hours');
+            $table->text('instruction')->nullable();
+            $table->json('files')->nullable();
+            $table->json('url')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('playlists');
+        Schema::dropIfExists('sub_lessons');
     }
 };

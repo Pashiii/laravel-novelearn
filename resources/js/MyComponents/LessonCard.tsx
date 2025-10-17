@@ -1,49 +1,53 @@
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-
+import { Link } from '@inertiajs/react';
+import { route } from 'ziggy-js';
+import { DeleteAlert } from './DeleteAlert';
+import ReusableCard from './ReusableCard';
+import { UpdateLessonDialog } from './UpdateLessonDialog';
 interface LessonCardProps {
+    id: number;
+    playlistId: number;
     title: string;
     description?: string;
     thumbnail?: string;
 }
-
-export default function LessonCard({
+export const LessonCard: React.FC<LessonCardProps> = ({
+    id,
+    playlistId,
     title,
     description,
     thumbnail,
-}: LessonCardProps) {
-    return (
-        <Card className="w-full max-w-sm overflow-hidden shadow-md transition hover:shadow-lg">
-            <CardHeader>
-                <div className="h-40 w-full overflow-hidden rounded-md">
-                    <img
-                        src={`${thumbnail ? `/storage/${thumbnail}` : '/default-lesson.jpg'}`}
-                        alt={title}
-                        className="h-full w-full object-cover"
-                    />
-                </div>
-                <CardTitle>{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-2">
-                <div className="grid grid-cols-2 gap-2">
-                    <Button className="bg-orange-400 text-white">Update</Button>
-                    <Button className="bg-red-500 text-white hover:bg-red-600">
-                        Delete
-                    </Button>
-                </div>
-
+}) => {
+    const LessonActions = (
+        <>
+            <div className="grid grid-cols-2 gap-2">
+                <UpdateLessonDialog
+                    lesson={{
+                        id: id,
+                        playlist_id: playlistId,
+                        title: title,
+                        description: description,
+                    }}
+                />
+                <DeleteAlert
+                    data={{ id, title }}
+                    routeName="lesson.destroy"
+                    params={{ playlist: playlistId, id: id }}
+                />
+            </div>
+            <Link href={route('sub_lesson.index', { id: id })}>
                 <Button className="w-full bg-green-900 text-white">
                     View Lesson
                 </Button>
-            </CardContent>
-        </Card>
+            </Link>
+        </>
     );
-}
+    return (
+        <ReusableCard
+            title={title}
+            description={description}
+            thumbnail={thumbnail}
+            actions={LessonActions}
+        />
+    );
+};

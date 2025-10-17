@@ -11,46 +11,71 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { Lesson, Playlists } from '@/types';
+import { Lesson } from '@/types';
 import { useForm } from '@inertiajs/react';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
+import AttachmentUploader from './AttachmentUploader';
 
 interface Props {
-    playlist: Playlists;
-    lesson: Lesson[];
+    lesson: Lesson;
     className?: string;
 }
+interface Attachment {
+    type: 'file' | 'image' | 'video' | 'link' | 'pdf';
+    name: string;
+    url: string;
+}
 
-export const CreateLessonDialog: React.FC<Props> = ({
-    playlist,
-    lesson,
+export const CreateSubLessonDialog: React.FC<Props> = ({
     className,
+    lesson,
 }) => {
-    const { data, setData, post, processing, reset, errors } = useForm({
+    const { data, setData, post, errors, processing, reset } = useForm<{
+        title: string;
+        type: string;
+        instruction: string;
+        thumb: File | null;
+        files: File[];
+        url: string;
+    }>({
         title: '',
-        description: '',
-        thumb: null as File | null,
+        type: '',
+        instruction: '',
+        thumb: null,
+        files: [],
+        url: '',
     });
 
     const closeButtonRef = useRef<HTMLButtonElement>(null);
+    console.log(data);
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        post(route('lesson.store', { playlist: playlist.id }), {
+
+        post(route('sub_lesson.store', { lesson: lesson.id }), {
             forceFormData: true,
             onSuccess: () => {
                 reset();
                 closeButtonRef.current?.click();
-                toast.success('Lesson created successfully!');
+                toast.success('New material added!');
             },
             onError: () => {
-                toast.error('Failed to created!');
+                toast.error('Failed to create!');
             },
         });
     };
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -60,10 +85,9 @@ export const CreateLessonDialog: React.FC<Props> = ({
                         className,
                     )}
                 >
-                    Add New Lesson
+                    Add New Lesson Material
                 </Button>
             </DialogTrigger>
-
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Create Lesson</DialogTitle>
@@ -73,29 +97,31 @@ export const CreateLessonDialog: React.FC<Props> = ({
                         submitting.
                     </DialogDescription>
                 </DialogHeader>
+
                 <form onSubmit={handleSubmit} className="grid gap-4">
                     <div className="grid gap-3">
-                        <Label htmlFor="course_title">Lesson Number</Label>
+                        <Label htmlFor="lesson_number">Lesson Number</Label>
                         <Input
-                            id="course_title"
-                            name="course_title"
+                            id="lesson_number"
+                            name="lesson_number"
                             readOnly
-                            value={lesson.length ? lesson.length + 1 : 1}
+                            // value={lesson.length ? lesson.length + 1 : 1}
                         />
                     </div>
                     <div className="grid gap-3">
-                        <Label htmlFor="course_title">Course Title</Label>
+                        <Label htmlFor="lesson_title">Lesson Title</Label>
 
                         <Input
-                            id="course_title"
-                            name="course_title"
-                            value={playlist.title}
+                            id="lesson_title"
+                            name="lesson_title"
+                            value={lesson.title}
                             readOnly
                         />
                     </div>
+
                     <div className="grid gap-3">
                         <Label htmlFor="title">
-                            Lesson Title
+                            Material Title
                             <span className="ml-1 text-red-600">*</span>
                         </Label>
                         {errors.title && data.title.length == 0 && (
@@ -113,23 +139,43 @@ export const CreateLessonDialog: React.FC<Props> = ({
                         />
                     </div>
                     <div className="grid gap-3">
+                        <Label htmlFor="lesson_title">Lesson Title</Label>
+                        <Select
+                            defaultValue=""
+                            onValueChange={(value) => setData('type', value)}
+                        >
+                            <SelectTrigger id="type">
+                                <SelectValue placeholder="Select Assessment" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="material">
+                                    Material
+                                </SelectItem>
+                                <SelectItem value="activity">
+                                    Activity
+                                </SelectItem>
+                                <SelectItem value="exam">Exam</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="grid gap-3">
                         <Label htmlFor="description">
-                            Course Description
+                            Material Instructions
                             <span className="ml-1 text-red-600">*</span>
                         </Label>
-                        {errors.description && data.description.length == 0 && (
+                        {errors.instruction && data.instruction.length == 0 && (
                             <p className="text-sm text-red-600">
-                                {errors.description}
+                                {errors.instruction}
                             </p>
                         )}
                         <Textarea
                             id="description"
                             name="description"
                             placeholder="Write description"
-                            className={`${errors.description && data.description.length <= 0 ? 'border-red-600' : ''}`}
-                            value={data.description}
+                            className={`${errors.instruction && data.instruction.length <= 0 ? 'border-red-600' : ''}`}
+                            value={data.instruction}
                             onChange={(e) =>
-                                setData('description', e.target.value)
+                                setData('instruction', e.target.value)
                             }
                         />
                     </div>
@@ -146,6 +192,9 @@ export const CreateLessonDialog: React.FC<Props> = ({
                             }}
                         />
                     </div>
+
+                    <AttachmentUploader setData={setData} data={data} />
+
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button
