@@ -47,18 +47,17 @@ export const CreateSubLessonDialog: React.FC<Props> = ({
         instruction: string;
         thumb: File | null;
         files: File[];
-        url: string;
+        url: string[];
     }>({
         title: '',
         type: '',
         instruction: '',
         thumb: null,
         files: [],
-        url: '',
+        url: [],
     });
 
     const closeButtonRef = useRef<HTMLButtonElement>(null);
-    console.log(data);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -88,7 +87,7 @@ export const CreateSubLessonDialog: React.FC<Props> = ({
                     Add New Lesson Material
                 </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] w-full overflow-y-auto p-4 sm:w-auto sm:max-w-lg sm:rounded-lg sm:p-6">
                 <DialogHeader>
                     <DialogTitle>Create Lesson</DialogTitle>
                     <DialogDescription>
