@@ -15,6 +15,10 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Interfaces\PlaylistRepositoryInterface::class,
             \App\Repositories\PlaylistRepository::class
         );
+        $this->app->bind(
+            \App\Interfaces\LessonRepositoryInterface::class,
+            \App\Repositories\LessonRepository::class
+        );
     }
 
     /**

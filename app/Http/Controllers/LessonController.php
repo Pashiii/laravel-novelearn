@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Lesson\LessonRequest;
+use App\Interfaces\LessonRepositoryInterface;
 use App\Models\Lesson;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
@@ -10,10 +12,15 @@ use Inertia\Inertia;
 
 class LessonController extends Controller
 {
+
+    protected $lessonRepository;
+    public function __construct(LessonRepositoryInterface $lessonRepository){
+        $this->lessonRepository = $lessonRepository;
+    }
     public function index(Playlist $playlist)
     {
-        $playlist->loadCount('lesson'); // adds $playlist->lesson_count
-        $lessons = $playlist->lesson()->latest()->paginate(9);
+        $playlist->loadCount('lesson'); 
+        $lessons = $this->lessonRepository->getLessonByPlaylist($playlist);
 
         return Inertia::render('Playlist/ViewPlaylist', [
             'playlist' => $playlist,
@@ -21,63 +28,23 @@ class LessonController extends Controller
         ]);
     }
 
-    public function store(Request $request, Playlist $playlist)
+    public function store(LessonRequest $request, Playlist $playlist)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:100',
-            'description' => 'nullable|string',
-            'thumb' => 'nullable|image|max:2040',
-        ]);
-        if ($request->hasFile('thumb')) {
-            $validated['thumb'] = Storage::disk('s3')->url(
-                $request->file('thumb')->store('thumbnails', 's3')
-            );
-        }
 
-        $validated['playlist_id'] = $playlist->id;
-        Lesson::create($validated);
+        $this->lessonRepository->storeLesson($playlist, $request->validated());
 
         return redirect()->back()->with('success', 'Lesson created successfully!');
     }
 
     public function destroy(Playlist $playlist, $id)
     {
-        $lesson = $playlist->lesson()->findOrFail($id);
-        if ($lesson->thumb && Storage::disk('s3')->exists($lesson->thumb)) {
-            Storage::disk('s3')->delete($lesson->thumb);
-        }
-
-        $lesson->delete();
+        $this->lessonRepository->deleteLesson($playlist, $id);
 
         return redirect()->route('lesson.index', ['playlist' => $playlist->id])->with('message', 'Lesson deleted sucessfully!');
     }
 
-    public function update(Request $request, Playlist $playlist, Lesson $lesson)
+    public function update(LessonRequest $request, Playlist $playlist, Lesson $lesson)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:100',
-            'description' => 'nullable|string',
-            'thumb' => 'nullable|image|max:2040',
-        ]);
-
-        if ($request->hasFile('thumb')) {
-            if ($lesson->thumb) {
-                if (Storage::disk('s3')->exists($lesson->thumb)) {
-                    Storage::disk('s3')->delete($lesson->thumb);
-                }
-            }
-            $validated['thumb'] = Storage::disk('s3')->url(
-                $request->file('thumb')->store('thumbnails', 's3')
-            );
-        } else {
-            $validated['thumb'] = $lesson->thumb;
-        }
-
-        $lesson->update([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'thumb' => $validated['thumb'],
-        ]);
-
+        $this->lessonRepository->updateLesson($lesson, $request->validated());
     }
 }
