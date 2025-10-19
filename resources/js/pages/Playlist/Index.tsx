@@ -24,7 +24,7 @@ export default function Index({ playlists }: PageProps) {
                     <div className="mr-10 mb-5 flex justify-end">
                         <CreatePlaylistDialog />
                     </div>
-                    <div className="grid gap-5 min-[490px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid auto-rows-fr gap-5 min-[490px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3">
                         {playlists.map((playlist, index) => (
                             <PlaylistCard playlist={playlist} key={index} />
                         ))}
