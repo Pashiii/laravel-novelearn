@@ -95,47 +95,45 @@ export default function AttachmentUploader({ setData, data }: Props) {
         <div className="space-y-4">
             {/* Attachments Preview */}
             <div className="space-y-2">
-                <div className="max-h-[12vh] space-y-2 overflow-auto">
-                    {attachments.map((item, index) => (
-                        <div
-                            key={index}
-                            className="flex items-center justify-between rounded-md border bg-white p-2 shadow-sm"
-                        >
-                            <div className="flex items-center gap-2">
-                                {item.type === 'pdf' && (
-                                    <FileText className="h-4 w-4 text-red-600" />
-                                )}
-                                {item.type === 'image' && (
-                                    <Image className="h-4 w-4 text-yellow-500" />
-                                )}
-                                {item.type === 'video' && (
-                                    <Video className="h-4 w-4 text-blue-600" />
-                                )}
-                                {item.type === 'link' && (
-                                    <LinkIcon className="h-4 w-4 text-gray-500" />
-                                )}
-                                <a
-                                    href={item.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="truncate text-sm font-medium text-blue-700 hover:underline"
-                                >
-                                    {item.name.length > 50
-                                        ? item.name.slice(0, 50) + '...'
-                                        : item.name}
-                                </a>
-                            </div>
-
-                            <button
-                                type="button"
-                                onClick={() => removeAttachment(index)}
-                                className="rounded-full p-2 text-gray-500 hover:bg-gray-200"
+                {attachments.map((item, index) => (
+                    <div
+                        key={index}
+                        className="flex items-center justify-between rounded-md border bg-white p-2 shadow-sm"
+                    >
+                        <div className="flex items-center gap-2">
+                            {item.type === 'pdf' && (
+                                <FileText className="h-4 w-4 text-red-600" />
+                            )}
+                            {item.type === 'image' && (
+                                <Image className="h-4 w-4 text-yellow-500" />
+                            )}
+                            {item.type === 'video' && (
+                                <Video className="h-4 w-4 text-blue-600" />
+                            )}
+                            {item.type === 'link' && (
+                                <LinkIcon className="h-4 w-4 text-gray-500" />
+                            )}
+                            <a
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="truncate text-sm font-medium text-blue-700 hover:underline"
                             >
-                                <X className="h-4 w-4" />
-                            </button>
+                                {item.name.length > 50
+                                    ? item.name.slice(0, 50) + '...'
+                                    : item.name}
+                            </a>
                         </div>
-                    ))}
-                </div>
+
+                        <button
+                            type="button"
+                            onClick={() => removeAttachment(index)}
+                            className="rounded-full p-2 text-gray-500 hover:bg-gray-200"
+                        >
+                            <X className="h-4 w-4" />
+                        </button>
+                    </div>
+                ))}
 
                 {attachments.length === 0 && (
                     <div className="flex flex-col items-center justify-center rounded-md border border-dashed py-10 text-gray-500">
