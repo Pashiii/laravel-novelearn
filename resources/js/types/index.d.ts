@@ -5,7 +5,7 @@ export interface Playlists {
     id: number;
     title: string;
     description: string;
-    thumb: string;
+    thumb?: string;
     hours: number;
     created_at: string;
     lesson_count: number;
@@ -20,7 +20,7 @@ export interface Lesson {
     updated_at?: string;
 }
 
-export interface SubLesson{
+export interface SubLesson {
     id: number;
     lesson_id: number;
     title: string;
