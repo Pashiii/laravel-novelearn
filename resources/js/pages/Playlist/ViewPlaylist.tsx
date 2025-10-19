@@ -54,8 +54,6 @@ export default function ViewPlaylist({ playlist, lessons }: PageProps) {
         flash?: { success?: string; error?: string };
     };
 
-    const handleEditLesson = () => {};
-
     const handleClickPagination = (url: string | null) => {
         if (url) router.visit(url);
     };
@@ -71,7 +69,7 @@ export default function ViewPlaylist({ playlist, lessons }: PageProps) {
                                     {playlist.lesson_count}
                                 </span>
                                 <img
-                                    src={`${playlist.thumb ? `${playlist.thumb}` : 'default-playlist.jpg'}`}
+                                    src={`${playlist.thumb ? `${playlist.thumb}` : '/default-playlist.jpg'}`}
                                     alt=""
                                     className="h-full w-full object-cover"
                                 />
