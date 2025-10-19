@@ -25,7 +25,7 @@ export default function ReusableCard({
             <CardHeader>
                 <div className="h-40 w-full overflow-hidden rounded-md">
                     <img
-                        src={`${thumbnail ? `${thumbnail}` : 'default-lesson.jpg'}`}
+                        src={`${thumbnail ? `${thumbnail}` : '/default-lesson.jpg'}`}
                         alt={title}
                         className="h-full w-full object-cover"
                     />
