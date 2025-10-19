@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from '@inertiajs/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
@@ -26,27 +26,36 @@ export const CreatePlaylistDialog = () => {
         hours: '',
     });
 
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         post(route('playlist.store'), {
             forceFormData: true,
             onSuccess: () => {
                 reset();
+                closeButtonRef.current?.click();
                 toast.success('Course created successfully!');
             },
         });
     };
 
-    useEffect(() => {
+    const generateCourseId = () => {
         const id = crypto.randomUUID();
         const short = id.replace(/-/g, '').slice(0, 14);
         const courseID = 'CRS-' + short;
         setData('course_id', courseID);
+    };
+
+    useEffect(() => {
+        generateCourseId();
     }, []);
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="bg-green-900 px-10 py-6 text-sm text-white">
+                <Button
+                    className="bg-green-900 px-10 py-6 text-sm text-white"
+                    onClick={() => generateCourseId()}
+                >
                     Add Course
                 </Button>
             </DialogTrigger>
@@ -153,6 +162,7 @@ export const CreatePlaylistDialog = () => {
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button
+                                ref={closeButtonRef}
                                 type="button"
                                 variant="outline"
                                 className="bg-red-500 text-white"
