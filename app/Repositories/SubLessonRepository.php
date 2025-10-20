@@ -44,6 +44,14 @@ class SubLessonRepository implements SubLessonRepositoryInterface
         return $subLesson;
     }
 
+    public function findSubLessonById(Lesson $lesson, $id): SubLesson{
+        $sublesson = $lesson
+        ->sublesson()
+        ->with('files')
+        ->findOrFail($id);
+        return $sublesson;
+    }
+
     public function updateSubLesson(SubLesson $subLesson, array $data): bool{
         $subLesson->update([
             'title' => $data['title'] ?? $subLesson->title,

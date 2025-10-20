@@ -14,4 +14,6 @@ interface SubLessonRepositoryInterface
     public function updateSubLesson(SubLesson $subLesson, array $data): bool;
     
     public function deleteSubLesson(Lesson $lesson, $id): bool;
+    
+    public function findSubLessonById(Lesson $lesson ,int $id):SubLesson;
 }

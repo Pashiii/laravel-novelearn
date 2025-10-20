@@ -26,6 +26,12 @@ class SubLessonController extends Controller
         ]);
     }
 
+    public function show(Lesson $lesson, $id){
+        $subLesson = $this->subLessonRepository->findSubLessonById($lesson,$id);
+        return Inertia::render('SubLesson/Index', [
+            'subLesson' => $subLesson]);
+    }
+
     public function store(Request $request, Lesson $lesson){
 
         $validated = $request->validate([
