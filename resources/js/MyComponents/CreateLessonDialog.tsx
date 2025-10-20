@@ -162,7 +162,7 @@ export const CreateLessonDialog: React.FC<Props> = ({
                             className="bg-green-900 text-white"
                             disabled={processing}
                         >
-                            Create Course
+                            Create Lesson
                         </Button>
                     </DialogFooter>
                 </form>

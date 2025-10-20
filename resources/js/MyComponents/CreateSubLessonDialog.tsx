@@ -29,17 +29,14 @@ import AttachmentUploader from './AttachmentUploader';
 
 interface Props {
     lesson: Lesson;
+    total: number;
     className?: string;
-}
-interface Attachment {
-    type: 'file' | 'image' | 'video' | 'link' | 'pdf';
-    name: string;
-    url: string;
 }
 
 export const CreateSubLessonDialog: React.FC<Props> = ({
     className,
     lesson,
+    total,
 }) => {
     const { data, setData, post, errors, processing, reset } = useForm<{
         title: string;
@@ -61,7 +58,6 @@ export const CreateSubLessonDialog: React.FC<Props> = ({
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         post(route('sub_lesson.store', { lesson: lesson.id }), {
             forceFormData: true,
             onSuccess: () => {
@@ -104,7 +100,7 @@ export const CreateSubLessonDialog: React.FC<Props> = ({
                             id="lesson_number"
                             name="lesson_number"
                             readOnly
-                            // value={lesson.length ? lesson.length + 1 : 1}
+                            value={total ? total + 1 : 1}
                         />
                     </div>
                     <div className="grid gap-3">
@@ -210,7 +206,7 @@ export const CreateSubLessonDialog: React.FC<Props> = ({
                             className="bg-green-900 text-white"
                             disabled={processing}
                         >
-                            Create Course
+                            Create Material
                         </Button>
                     </DialogFooter>
                 </form>
