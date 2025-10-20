@@ -1,4 +1,6 @@
 import { Button } from '@/components/ui/button';
+import { Link } from '@inertiajs/react';
+import { route } from 'ziggy-js';
 import { DeleteAlert } from './DeleteAlert';
 import ReusableCard from './ReusableCard';
 import { UpdateSubLessonDialog } from './UpdateSubLessonDialog';
@@ -51,8 +53,14 @@ export const SubLessonCard: React.FC<SubLessonCardProps> = ({
                     routeName="sub_lesson.destroy"
                 />
             </div>
-
-            <Button className="w-full bg-green-900 text-white">View</Button>
+            <Link
+                href={route('sub_lesson.show', {
+                    lesson: lessonId,
+                    subLesson: id,
+                })}
+            >
+                <Button className="w-full bg-green-900 text-white">View</Button>
+            </Link>
         </>
     );
     return (

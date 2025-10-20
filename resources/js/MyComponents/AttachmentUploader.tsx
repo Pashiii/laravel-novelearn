@@ -88,7 +88,6 @@ export default function AttachmentUploader({
     const removeExistingFile = (fileId: number) => {
         setData('deleted_files', [...(data.deleted_files || []), fileId]);
     };
-    console.log(data);
     const getFileIcon = (type: string) => {
         if (type.includes('pdf'))
             return <FileText className="h-4 w-4 text-red-600" />;

@@ -31,7 +31,9 @@ export default function ReusableCard({
                     />
                 </div>
                 <CardTitle>{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
+                <CardDescription className="truncate">
+                    {description}
+                </CardDescription>
             </CardHeader>
 
             <CardContent className="space-y-2">{actions}</CardContent>
