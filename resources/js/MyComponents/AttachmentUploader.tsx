@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { FileItem } from '@/types';
 
 import { SetDataAction } from '@inertiajs/react';
 import {
@@ -36,6 +37,7 @@ interface Props {
         thumb: File | null;
         files: File[];
         url: string[];
+        deleted_files: number[];
     }>;
     data: {
         title: string;
@@ -44,56 +46,68 @@ interface Props {
         thumb: File | null;
         files: File[];
         url: string[];
+        deleted_files?: number[];
     };
+    existingFiles?: FileItem[];
 }
 
-export default function AttachmentUploader({ setData, data }: Props) {
-    const [attachments, setAttachments] = useState<Attachment[]>([]);
+export default function AttachmentUploader({
+    setData,
+    data,
+    existingFiles,
+}: Props) {
+    const [attachments, setAttachments] = useState<File[]>([]);
     const [addLinks, setAddLinks] = useState(false);
     const [url, setUrl] = useState('');
     const [uploading, setUploading] = useState(false);
+    const awsURL = import.meta.env.VITE_AWS_URL;
+
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
-        setData('files', [...data.files, ...files]);
+
         setUploading(true);
-        const newAttachments: Attachment[] = [];
-        for (const file of files) {
-            const type = file.type.startsWith('image/')
-                ? 'image'
-                : file.type.startsWith('video/')
-                  ? 'video'
-                  : file.type === 'application/pdf'
-                    ? 'pdf'
-                    : 'file';
-
-            const tempUrl = URL.createObjectURL(file);
-            newAttachments.push({
-                type,
-                name: file.name,
-                url: tempUrl,
-            });
-        }
-
-        setAttachments((prev) => [...prev, ...newAttachments]);
+        setData('files', [...data.files, ...files]);
+        setAttachments((prev) => [...prev, ...files]);
         setUploading(false);
     };
 
     const handleAddLink = () => {
+        if (!url.trim()) return;
         setData('url', [...data.url, url]);
-        setAttachments((prev) => [...prev, { type: 'link', name: url, url }]);
         setAddLinks(false);
         setUrl('');
-        console.log(data.url);
     };
 
     const removeAttachment = (index: number) => {
-        setAttachments((prev) => prev.filter((_, i) => i !== index));
+        const updated = attachments.filter((_, i) => i !== index);
+        setAttachments(updated);
+        setData('files', updated);
     };
 
+    const removeExistingFile = (fileId: number) => {
+        setData('deleted_files', [...(data.deleted_files || []), fileId]);
+    };
+    console.log(data);
+    const getFileIcon = (type: string) => {
+        if (type.includes('pdf'))
+            return <FileText className="h-4 w-4 text-red-600" />;
+        if (
+            type.includes('jpg') ||
+            type.includes('png') ||
+            type.includes('jpeg')
+        )
+            return <Image className="h-4 w-4 text-yellow-500" />;
+        if (type.includes('video'))
+            return <Video className="h-4 w-4 text-blue-600" />;
+        if (type === 'link')
+            return <LinkIcon className="h-4 w-4 text-gray-500" />;
+        return <FileText className="h-4 w-4 text-gray-500" />;
+    };
     return (
         <div className="space-y-4">
             {/* Attachments Preview */}
+
             <div className="space-y-2">
                 {attachments.map((item, index) => (
                     <div
@@ -101,28 +115,12 @@ export default function AttachmentUploader({ setData, data }: Props) {
                         className="flex items-center justify-between rounded-md border bg-white p-2 shadow-sm"
                     >
                         <div className="flex items-center gap-2">
-                            {item.type === 'pdf' && (
-                                <FileText className="h-4 w-4 text-red-600" />
-                            )}
-                            {item.type === 'image' && (
-                                <Image className="h-4 w-4 text-yellow-500" />
-                            )}
-                            {item.type === 'video' && (
-                                <Video className="h-4 w-4 text-blue-600" />
-                            )}
-                            {item.type === 'link' && (
-                                <LinkIcon className="h-4 w-4 text-gray-500" />
-                            )}
-                            <a
-                                href={item.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="truncate text-sm font-medium text-blue-700 hover:underline"
-                            >
+                            {getFileIcon(item.type)}
+                            <span className="truncate text-sm font-medium">
                                 {item.name.length > 50
                                     ? item.name.slice(0, 50) + '...'
                                     : item.name}
-                            </a>
+                            </span>
                         </div>
 
                         <button
@@ -134,8 +132,38 @@ export default function AttachmentUploader({ setData, data }: Props) {
                         </button>
                     </div>
                 ))}
+                {existingFiles
+                    ?.filter((f) => !(data.deleted_files || []).includes(f.id))
+                    .map((file, index) => (
+                        <div
+                            key={index}
+                            className="flex items-center justify-between rounded-md border bg-white p-2 shadow-sm"
+                        >
+                            <div className="flex items-center gap-2">
+                                {getFileIcon(file?.file_path)}
+                                <a
+                                    href={awsURL + '/' + file.file_path}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="truncate text-sm font-medium text-blue-700 hover:underline"
+                                >
+                                    {file.file_name.length > 50
+                                        ? file.file_name.slice(0, 50) + '...'
+                                        : file.file_name}
+                                </a>
+                            </div>
 
-                {attachments.length === 0 && (
+                            <button
+                                type="button"
+                                onClick={() => removeExistingFile(file.id)}
+                                className="rounded-full p-2 text-gray-500 hover:bg-gray-200"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+                    ))}
+
+                {attachments.length === 0 && existingFiles?.length === 0 && (
                     <div className="flex flex-col items-center justify-center rounded-md border border-dashed py-10 text-gray-500">
                         <p className="text-sm">No attachments yet</p>
                     </div>

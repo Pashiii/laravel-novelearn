@@ -19,7 +19,7 @@ class Lesson extends Model
         return $this->belongsTo(Playlist::class);
     }
 
-        public function sublesson(){
+    public function sublesson(){
         return $this->hasMany(SubLesson::class);
     }
 }

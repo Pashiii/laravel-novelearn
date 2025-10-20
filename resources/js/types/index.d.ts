@@ -19,6 +19,12 @@ export interface Lesson {
     created_at?: string;
     updated_at?: string;
 }
+export interface FileItem {
+    id: number;
+    file_name: string;
+    file_path: string;
+    file_type: string;
+}
 
 export interface SubLesson {
     id: number;
@@ -26,8 +32,9 @@ export interface SubLesson {
     title: string;
     instruction?: string;
     thumb?: string;
-    files?: string[];
+    files?: FileItem[];
     type: string;
+    url?: string[];
     created_at?: string;
     updated_at?: string;
 }
