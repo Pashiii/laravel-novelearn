@@ -25,9 +25,7 @@ class PlaylistRepository implements PlaylistRepositoryInterface
     public function create(array $data, $thumb = null) : Playlist
     {
         if ($data['thumb']) {
-            $data['thumb'] = Storage::disk('s3')->url(
-                $data['thumb']->store('thumbnails', 's3')
-            );
+            $data['thumb'] = $data['thumb']->store('thumbnails', 's3');
         }
         return Playlist::create($data);
     }
@@ -35,30 +33,26 @@ class PlaylistRepository implements PlaylistRepositoryInterface
     {
         if ($data['thumb']) {
                 if ($playlist->thumb) {
-                    $path = str_replace(env('AWS_URL') . '/', '', $playlist->thumb);
-                    if (Storage::disk('s3')->exists($path)) {
-                        Storage::disk('s3')->delete($path);
+                    if (Storage::disk('s3')->exists($playlist->thumb)) {
+                        Storage::disk('s3')->delete($playlist->thumb);
                     }
                 }
-                $data['thumb'] = Storage::disk('s3')->url(
-                    $data['thumb']->store('thumbnails', 's3')
-                );
+                $data['thumb'] = $data['thumb']->store('thumbnails', 's3');
+
         }
         return $playlist->update($data);
     }
     public function delete(Playlist $playlist): bool
     {
-        if( $playlist->thumb) {
-            $path = str_replace(env('AWS_URL') . '/', '', $playlist->thumb);
-            if (Storage::disk('s3')->exists($path)) {
-                Storage::disk('s3')->delete($path);
+        if($playlist->thumb) {
+            if (Storage::disk('s3')->exists($playlist->thumb)) {
+                Storage::disk('s3')->delete($playlist->thumb);
             }
         }
         foreach ($playlist->lesson as $lesson){
             if($lesson->thumb){
-                $path = str_replace(env('AWS_URL') . '/', '', $playlist->thumb);
-                if (Storage::disk('s3')->exists($path)) {
-                Storage::disk('s3')->delete($path);
+                if (Storage::disk('s3')->exists($lesson->thumb)) {
+                Storage::disk('s3')->delete($lesson->thumb);
             } 
             }
         }

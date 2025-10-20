@@ -22,9 +22,7 @@ class LessonRepository implements LessonRepositoryInterface
     public function storeLesson(Playlist $playlist, array $data): Lesson
     {
         if (isset($data['thumb']) && $data['thumb']->isValid()) {
-            $data['thumb'] = Storage::disk('s3')->url(
-                $data['thumb']->store('thumbnails', 's3')
-            );
+            $data['thumb'] = $data['thumb']->store('thumbnails', 's3');
         }
 
         $data['playlist_id'] = $playlist->id;
@@ -39,9 +37,7 @@ class LessonRepository implements LessonRepositoryInterface
                 Storage::disk('s3')->delete($lesson->thumb);
             }
    
-            $data['thumb'] = Storage::disk('s3')->url(
-                $data['thumb']->store('thumbnails', 's3')
-            );
+            $data['thumb'] = $data['thumb']->store('thumbnails', 's3');
         }else {
             $data['thumb'] = $lesson->thumb;
         }
