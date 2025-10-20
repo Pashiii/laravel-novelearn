@@ -31,6 +31,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/sub_lesson', [SubLessonController::class, 'store'])->name('sub_lesson.store');
         Route::match(['put', 'post'],'/sub_lesson/{subLesson}', [SubLessonController::class, 'update'])->name('sub_lesson.update');
         Route::delete('/sub_lesson/{id}', [SubLessonController::class, 'destroy'])->name('sub_lesson.destroy');
+        Route::get('/sub_lesson/{subLesson}', [SubLessonController::class, 'show'])->name('sub_lesson.show');
     });
 });
 
