@@ -19,6 +19,10 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Interfaces\LessonRepositoryInterface::class,
             \App\Repositories\LessonRepository::class
         );
+        $this->app->bind(
+            \App\Interfaces\SubLessonRepositoryInterface::class,
+            \App\Repositories\SubLessonRepository::class
+        );
     }
 
     /**

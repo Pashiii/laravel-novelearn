@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Interfaces\SubLessonRepositoryInterface;
 use App\Models\Lesson;
+use App\Models\SubLesson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class SubLessonController extends Controller
 {
-    public function index(Lesson $lesson){
-        $lesson->load(['playlist', 'sublesson']); 
 
+    protected $subLessonRepository;
+    public function __construct(SubLessonRepositoryInterface $subLessonRepository){
+        $this->subLessonRepository = $subLessonRepository;
+    }
+    public function index(Lesson $lesson){
+        $lesson->load('playlist'); 
+        $sublessons = $this->subLessonRepository->getSubLessonByLesson($lesson);
         return Inertia::render('Lesson/Index', [
             'lesson' => $lesson,
-            'sublessons' =>  $lesson->sublesson,
+            'sublessons' =>  $sublessons,
             'playlist' => $lesson->playlist,
         ]);
     }
@@ -29,24 +36,28 @@ class SubLessonController extends Controller
             'thumb' => 'nullable|file|image|max:3072',
             'url' => 'nullable|string',
         ]);
-
-        $uploaded = [];
-        if($request->hasFile('files')){
-            foreach ($request->file('files') as $file){
-                $path = $file->store('sub_lessons', 's3');
-                $uploaded[] = Storage::disk('s3')->url($path);
-            };
-        }
-
-        $finalFiles = array_merge($uploaded, $request->input('files', []));
-        $lesson->sublesson()->create([
-            'title' => $validated['title'],
-            'instruction' => $validated['instruction'] ?? '',
-            'files' => json_encode($finalFiles),
-            'type' => $validated['type'],
-        ]);
+        $this->subLessonRepository->storeSubLesson($lesson, $validated);
 
         return redirect()->route('sub_lesson.index', ['lesson' => $lesson->id])->with('success', 'Sub lesson created!');
 
+    }
+    public function update(Request $request, Lesson $lesson ,SubLesson $subLesson){
+        $validated = $request->validate([
+            'title' => 'required|string|max:100',
+            'instruction' => 'nullable|string',
+            'type' => 'nullable|string',
+            'files' => 'nullable|array',
+            'thumb' => 'nullable|file|image|max:3072',
+            'url' => 'nullable|string',
+            'deleted_files' => 'nullable|array', 
+            'deleted_files.*' => 'integer|exists:sub_lesson_files,id', 
+        ]);
+
+        $this->subLessonRepository->updateSubLesson($subLesson,$validated);
+    }
+
+    public function destroy(Lesson $lesson, $id){
+        $this->subLessonRepository->deleteSubLesson($lesson, $id);
+        return redirect()->route("sub_lesson.index", $lesson->id)->with('success' , "Delete Sub Lesson Successfully!");
     }
 }
