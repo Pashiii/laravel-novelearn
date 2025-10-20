@@ -145,7 +145,7 @@ export const UpdateLessonDialog: React.FC<Props> = ({ lesson }) => {
                             className="bg-green-900 text-white"
                             disabled={processing}
                         >
-                            Update Course
+                            Update Lesson
                         </Button>
                     </DialogFooter>
                 </form>

@@ -27,8 +27,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/lesson/{id}',[LessonController::class, 'destroy'])->name('lesson.destroy');
     });
     Route::prefix('/lesson/{lesson}')->group(function(){
-        Route::get('sub_lesson', [SubLessonController::class, 'index'])->name('sub_lesson.index');
-        Route::post('sub_lesson', [SubLessonController::class, 'store'])->name('sub_lesson.store');
+        Route::get('/sub_lesson', [SubLessonController::class, 'index'])->name('sub_lesson.index');
+        Route::post('/sub_lesson', [SubLessonController::class, 'store'])->name('sub_lesson.store');
+        Route::match(['put', 'post'],'/sub_lesson/{subLesson}', [SubLessonController::class, 'update'])->name('sub_lesson.update');
+        Route::delete('/sub_lesson/{id}', [SubLessonController::class, 'destroy'])->name('sub_lesson.destroy');
     });
 });
 

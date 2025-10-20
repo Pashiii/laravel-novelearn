@@ -7,11 +7,13 @@ import { Head } from '@inertiajs/react';
 interface Props {
     lesson: Lesson;
     playlist: Playlists;
-    sublessons: SubLesson[];
+    sublessons: {
+        data: SubLesson[];
+        total: number;
+    };
 }
 
 export default function Index({ lesson, playlist, sublessons }: Props) {
-    console.log(sublessons);
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Courses',
@@ -26,22 +28,27 @@ export default function Index({ lesson, playlist, sublessons }: Props) {
             href: '/lesson/id/lesson',
         },
     ];
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Lessons" />
+            <Head title="Sub Lessons" />
             <div className="mx-auto w-full max-w-6xl">
                 <div className="m-5">
                     <div className="mr-10 mb-5 flex justify-end">
-                        <CreateSubLessonDialog lesson={lesson} />
+                        <CreateSubLessonDialog
+                            lesson={lesson}
+                            total={sublessons.total}
+                        />
                     </div>
                     <div className="grid gap-5 min-[490px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3">
-                        {sublessons.map((sublesson, ind) => (
+                        {sublessons.data.map((sublesson, ind) => (
                             <SubLessonCard
+                                key={ind}
                                 title={sublesson.title}
                                 instruction={sublesson.instruction}
                                 id={sublesson.id}
+                                files={sublesson.files}
                                 lessonId={sublesson.lesson_id}
+                                type={sublesson.type}
                             />
                         ))}
                     </div>
