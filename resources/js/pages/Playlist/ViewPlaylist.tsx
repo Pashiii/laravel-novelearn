@@ -24,7 +24,7 @@ import { LessonCard } from '@/MyComponents/LessonCard';
 import { UpdatePlaylistDialog } from '@/MyComponents/UpdatePlaylistDialog';
 import { Lesson, Playlists, type BreadcrumbItem } from '@/types';
 import { formatDate } from '@/utils/dateFormat';
-import { Head, router, usePage } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Calendar, FolderOpen } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -50,10 +50,6 @@ interface PageProps {
 }
 
 export default function ViewPlaylist({ playlist, lessons }: PageProps) {
-    const { flash } = usePage().props as {
-        flash?: { success?: string; error?: string };
-    };
-
     const handleClickPagination = (url: string | null) => {
         if (url) router.visit(url);
     };
@@ -69,7 +65,7 @@ export default function ViewPlaylist({ playlist, lessons }: PageProps) {
                                     {playlist.lesson_count}
                                 </span>
                                 <img
-                                    src={`${playlist.thumb ? `${playlist.thumb}` : '/default-playlist.jpg'}`}
+                                    src={`${playlist.thumb ? `${import.meta.env.VITE_AWS_URL + '/' + playlist.thumb}` : '/default-playlist.jpg'}`}
                                     alt=""
                                     className="h-full w-full object-cover"
                                 />
