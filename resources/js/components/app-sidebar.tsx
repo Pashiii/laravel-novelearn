@@ -13,7 +13,15 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, BookText, Folder, LayoutGrid } from 'lucide-react';
+import {
+    BookOpen,
+    BookText,
+    BookUser,
+    ClipboardList,
+    Folder,
+    LayoutGrid,
+    School,
+} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -26,6 +34,21 @@ const mainNavItems: NavItem[] = [
         title: 'Courses',
         href: '/playlist',
         icon: BookText,
+    },
+    {
+        title: 'Batch List',
+        href: '/batch',
+        icon: ClipboardList,
+    },
+    {
+        title: 'Teachers',
+        href: '/teachers',
+        icon: School,
+    },
+    {
+        title: 'Students',
+        href: '/students',
+        icon: BookUser,
     },
 ];
 
