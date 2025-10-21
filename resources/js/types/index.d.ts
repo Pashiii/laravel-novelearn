@@ -4,6 +4,7 @@ import { LucideIcon } from 'lucide-react';
 export interface Playlists {
     id: number;
     title: string;
+    course_id: string;
     description: string;
     thumb?: string;
     hours: number;
@@ -37,6 +38,24 @@ export interface SubLesson {
     url?: string[];
     created_at?: string;
     updated_at?: string;
+}
+
+export interface Batch{
+    id: number;
+    course_id: string;
+    batch_number: string;
+    course_title: string;
+    tutor_id: string;
+    schedule: string[];
+    start_time: string;
+    end_time: string;
+    status: boolean;
+    tutor?: {
+        id: number;
+        first_name: string,
+        last_name: string,
+        middle_name: string,
+    }
 }
 
 export interface Auth {

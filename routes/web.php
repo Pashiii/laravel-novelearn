@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\LessonController;
-use App\Http\Controllers\PlaylistController;
-use App\Http\Controllers\SubLessonController;
+use App\Http\Controllers\Admin\BatchController;
+use App\Http\Controllers\Admin\LessonController;
+use App\Http\Controllers\Admin\PlaylistController;
+use App\Http\Controllers\Admin\SubLessonController;
+use App\Http\Controllers\Admin\TeacherController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -33,6 +35,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/sub_lesson/{id}', [SubLessonController::class, 'destroy'])->name('sub_lesson.destroy');
         Route::get('/sub_lesson/{subLesson}', [SubLessonController::class, 'show'])->name('sub_lesson.show');
     });
+
+    Route::middleware(['role:admin'])->group(function() {
+        Route::get('/teachers', [TeacherController::class, 'index'])->name('teacher.index');
+    });
+
+    Route::get('/batch', [BatchController::class, 'index'])->name('batch.index');
+    Route::get('/batch/{id}', [BatchController::class, 'show'])->name('batch.show');
+    Route::post('/batch', [BatchController::class, 'store'])->name('batch.store');
+    Route::put('/batch/{batch}', [BatchController::class, 'update'])->name('batch.update');
 });
 
 require __DIR__.'/settings.php';
