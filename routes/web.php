@@ -44,6 +44,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/batch/{id}', [BatchController::class, 'show'])->name('batch.show');
     Route::post('/batch', [BatchController::class, 'store'])->name('batch.store');
     Route::put('/batch/{batch}', [BatchController::class, 'update'])->name('batch.update');
+
+
+
+
+    Route::prefix('psgc')->group(function () {
+        Route::get('/regions', [PsgcController::class, 'regions']);
+        Route::get('/regions/{regionCode}/provinces', [PsgcController::class, 'provinces']);
+        Route::get('/provinces/{provinceCode}/cities', [PsgcController::class, 'cities']);
+        Route::get('/cities/{cityCode}/barangays', [PsgcController::class, 'barangays']);
+        Route::get('/address/{brgyCode}', [PsgcController::class, 'address']);
+    });
 });
 
 require __DIR__.'/settings.php';
