@@ -18,10 +18,21 @@ class Tutor extends Model
         'image',
         'address_id',
     ];
+    protected $appends = ['full_name'];
 
     protected $casts = [
         'date_of_birth' => 'date',
     ];
+
+    public function getFullNameAttribute(): string
+    {
+        if (!empty($this->middle_name)) {
+            return "{$this->first_name} " . strtoupper(substr($this->middle_name, 0, 1)) . ". {$this->last_name}";
+        }
+
+        return "{$this->first_name} {$this->last_name}";
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -36,9 +47,6 @@ class Tutor extends Model
         return $this->hasMany(Batch::class);
     }
 
-    public function getFullNameAttribute()
-    {
-        return "{$this->first_name} {$this->middle_name} {$this->last_name}";
-    }
+
 
 }

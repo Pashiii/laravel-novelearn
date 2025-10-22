@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\PlaylistController;
 use App\Http\Controllers\Admin\SubLessonController;
 use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\Admin\TutorController;
+use App\Http\Controllers\PSGCController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -37,7 +39,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::middleware(['role:admin'])->group(function() {
-        Route::get('/teachers', [TeacherController::class, 'index'])->name('teacher.index');
+        Route::get('/teachers', [TutorController::class, 'index'])->name('teacher.index');
+        Route::get('/teachers/create', [TutorController::class, 'create'])->name('teacher.create');
+        Route::post('/teachers', [TutorController::class, 'store'])->name('teacher.store');
+
     });
 
     Route::get('/batch', [BatchController::class, 'index'])->name('batch.index');
