@@ -7,6 +7,7 @@ use App\Http\Requests\Playlist\UpdatePlaylistRequest;
 use App\Interfaces\PlaylistRepositoryInterface;
 use App\Models\Playlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class PlaylistController extends Controller
@@ -17,6 +18,7 @@ class PlaylistController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
         $playlists = $this->playlistRepository->getAllPlaylistsWithLessonCount();
 
         return Inertia::render('Playlist/Index', compact('playlists'));
