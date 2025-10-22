@@ -15,7 +15,10 @@ class Address extends Model
         'city',
         'barangay',
         'street',
-        'zip_code',
+        'district',
+        'birth_city',
+        'birth_region',
+        'birth_province',
     ];
 
     // 🔗 Relationship: one address can belong to many students
