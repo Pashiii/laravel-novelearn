@@ -22,8 +22,10 @@ return new class extends Migration
             $table->string('age')->nullable(); 
             $table->string('contact_number')->nullable();
             $table->string('employment')->nullable();
+            $table->string('sex')->nullable();
             $table->json('education')->nullable();
             $table->string('email')->unique();
+            $table->string('nationality')->nullable();
             $table->string('civil_status');
             $table->string('image')->nullable();
             $table->string('guardian_name');

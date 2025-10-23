@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->constrained('playlists')->onDelete('cascade');
+            $table->string('course_id');
             $table->string('batch_number')->unique();
             $table->foreignId('tutor_id')->constrained('tutors');
             $table->string('course_title');

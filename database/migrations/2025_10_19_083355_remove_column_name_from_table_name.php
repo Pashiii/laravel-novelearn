@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('playlists', function (Blueprint $table) {
-            $table->dropColumn('tutor_id');
-        });
+        // Schema::table('playlists', function (Blueprint $table) {
+        //     $table->dropColumn('tutor_id');
+        // });
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('playlists', function (Blueprint $table) {
-            $table->dropColumn('tutor_id');
-        });
+        // Schema::table('playlists', function (Blueprint $table) {
+        //     $table->dropColumn('tutor_id');
+        // });
     }
 };
