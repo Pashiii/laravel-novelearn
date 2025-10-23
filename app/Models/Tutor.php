@@ -17,6 +17,8 @@ class Tutor extends Model
         'civil_status',
         'image',
         'address_id',
+        'sex',
+        'nationality',
     ];
     protected $appends = ['full_name'];
 

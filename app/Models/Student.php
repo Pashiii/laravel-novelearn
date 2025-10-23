@@ -15,6 +15,8 @@ class Student extends Model
         'date_of_birth',
         'contact_number',
         'employment',
+        'sex',
+        'nationality',
         'education',
         'email',
         'civil_status',
