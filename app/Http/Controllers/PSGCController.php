@@ -25,6 +25,12 @@ class PSGCController extends Controller
 
     public function cities($provinceCode)
     {
+        if ($provinceCode === '1300000000') {
+            return City::where('region_code', $provinceCode)
+                ->select('code', 'name')
+                ->orderBy('name')
+                ->get();
+        }
         return City::where('province_code', $provinceCode)
             ->select('code', 'name')
             ->orderBy('name')
