@@ -42,13 +42,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/teachers', [TutorController::class, 'index'])->name('teacher.index');
         Route::get('/teachers/create', [TutorController::class, 'create'])->name('teacher.create');
         Route::post('/teachers', [TutorController::class, 'store'])->name('teacher.store');
-
+        Route::delete('teachers/{tutor}', [TutorController::class, 'destroy'])->name('teacher.destroy');
     });
+    Route::get('/teachers/{tutor}', [TutorController::class, 'show'])->name('teacher.show');
+    Route::get('/teachers/edit/{tutor}', [TutorController::class, 'edit'])->name('teacher.edit');
+    Route::post('/teachers/edit/{tutor}', [TutorController::class, 'update'])->name('teacher.update');
+
+
+
 
     Route::get('/batch', [BatchController::class, 'index'])->name('batch.index');
     Route::get('/batch/{id}', [BatchController::class, 'show'])->name('batch.show');
     Route::post('/batch', [BatchController::class, 'store'])->name('batch.store');
-    Route::put('/batch/{batch}', [BatchController::class, 'update'])->name('batch.update');
+    Route::put('/batch/{batch}', [BatchController::class, 'update'])->name(name: 'batch.update');
 
 
 
@@ -59,6 +65,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/provinces/{provinceCode}/cities', [PsgcController::class, 'cities']);
         Route::get('/cities/{cityCode}/barangays', [PsgcController::class, 'barangays']);
         Route::get('/address/{brgyCode}', [PsgcController::class, 'address']);
+        Route::get('/full-address/{brgyCode}', [PSGCController::class, 'fullAddress']);
     });
 });
 
