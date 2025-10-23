@@ -14,6 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { dateFormat } from '@/utils/dateFormat';
 import { SetDataAction } from '@inertiajs/react';
 import { CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -61,6 +62,7 @@ interface Props {
         birth_city: string;
         image: File | null;
     }>;
+    edit?: boolean;
 }
 
 interface PSGC {
@@ -68,7 +70,7 @@ interface PSGC {
     code: string;
 }
 
-export const FormBase = ({ data, setData }: Props) => {
+export const FormBase = ({ data, setData, edit = false }: Props) => {
     const [date, setDate] = useState<Date>();
     const [regions, setRegions] = useState<PSGC[]>([]);
     const [provinces, setProvinces] = useState<PSGC[]>([]);
@@ -82,14 +84,24 @@ export const FormBase = ({ data, setData }: Props) => {
 
     useEffect(() => {
         if (data.region) {
-            fetch(`/psgc/regions/${data.region}/provinces`)
-                .then((res) => res.json())
-                .then(setProvinces);
-            setData('province', '');
-            setData('city', '');
-            setData('barangay', '');
-            setCities([]);
-            setBarangays([]);
+            const NCR_CODE = '1300000000';
+
+            if (data.region === NCR_CODE) {
+                fetch(`/psgc/provinces/${NCR_CODE}/cities`)
+                    .then((res) => res.json())
+                    .then((cities) => {
+                        setProvinces([]);
+                        setCities(cities);
+                        console.log(cities);
+                    });
+            } else {
+                fetch(`/psgc/regions/${data.region}/provinces`)
+                    .then((res) => res.json())
+                    .then((provinces) => {
+                        setProvinces(provinces);
+                        setCities([]);
+                    });
+            }
         }
     }, [data.region]);
     useEffect(() => {
@@ -97,9 +109,6 @@ export const FormBase = ({ data, setData }: Props) => {
             fetch(`/psgc/provinces/${data.province}/cities`)
                 .then((res) => res.json())
                 .then(setCities);
-            setData('city', '');
-            setData('barangay', '');
-            setBarangays([]);
         }
     }, [data.province]);
 
@@ -108,7 +117,6 @@ export const FormBase = ({ data, setData }: Props) => {
             fetch(`/psgc/cities/${data.city}/barangays`)
                 .then((res) => res.json())
                 .then(setBarangays);
-            setData('barangay', '');
         }
     }, [data.city]);
     return (
@@ -153,11 +161,24 @@ export const FormBase = ({ data, setData }: Props) => {
                             Region <span className="text-red-600">*</span>
                         </Label>
                         <Select
-                            value={data.region}
-                            onValueChange={(value) => setData('region', value)}
+                            defaultValue={data.region}
+                            onValueChange={(value) => {
+                                setData('region', value);
+                                setData('province', '');
+                                setData('city', '');
+                                setData('barangay', '');
+                                setCities([]);
+                                setBarangays([]);
+                            }}
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="select region" />
+                                <SelectValue
+                                    placeholder={
+                                        data.region
+                                            ? data.region
+                                            : 'select region'
+                                    }
+                                />
                             </SelectTrigger>
                             <SelectContent>
                                 {regions.map((region) => (
@@ -171,42 +192,73 @@ export const FormBase = ({ data, setData }: Props) => {
                             </SelectContent>
                         </Select>
                     </div>
-                    <div>
-                        <Label>
-                            Province <span className="text-red-600">*</span>
-                        </Label>
-                        <Select
-                            value={data.province}
-                            onValueChange={(value) =>
-                                setData('province', value)
-                            }
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="select province" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {provinces.map((province) => (
-                                    <SelectItem
-                                        key={province.code}
-                                        value={province.code}
-                                    >
-                                        {province.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+                    {data.region === '1300000000' ? (
+                        <div>
+                            <Label>Province</Label>
+                            <Input
+                                value="N/A"
+                                disabled
+                                className="bg-gray-100 text-gray-500"
+                            />
+                        </div>
+                    ) : (
+                        <div>
+                            <Label>
+                                Province <span className="text-red-600">*</span>
+                            </Label>
+                            <Select
+                                defaultValue={data.province}
+                                onValueChange={(value) => {
+                                    setData('province', value);
+                                    setData('city', '');
+                                    setData('barangay', '');
+                                    setBarangays([]);
+                                }}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue
+                                        placeholder={
+                                            data.province
+                                                ? data.province
+                                                : 'select province'
+                                        }
+                                    />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    {provinces.map((province) => (
+                                        <SelectItem
+                                            key={province.code}
+                                            value={province.code}
+                                        >
+                                            {province.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    )}
+
                     <div>
                         <Label>
                             City/Municipality{' '}
                             <span className="text-red-600">*</span>
                         </Label>
                         <Select
-                            value={data.city}
-                            onValueChange={(value) => setData('city', value)}
+                            defaultValue={data.city}
+                            onValueChange={(value) => {
+                                setData('city', value);
+                                setData('barangay', '');
+                            }}
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="select city/municipality" />
+                                <SelectValue
+                                    placeholder={
+                                        data.city
+                                            ? data.city
+                                            : 'select city/municipality'
+                                    }
+                                />
                             </SelectTrigger>
                             <SelectContent>
                                 {citites.map((city) => (
@@ -225,13 +277,19 @@ export const FormBase = ({ data, setData }: Props) => {
                             Barangay <span className="text-red-600">*</span>
                         </Label>
                         <Select
-                            value={data.barangay}
+                            defaultValue={data.barangay}
                             onValueChange={(value) =>
                                 setData('barangay', value)
                             }
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="select barangay" />
+                                <SelectValue
+                                    placeholder={
+                                        data.barangay
+                                            ? data.barangay
+                                            : 'select barangay'
+                                    }
+                                />
                             </SelectTrigger>
                             <SelectContent>
                                 {barangays.map((barangay) => (
@@ -314,12 +372,14 @@ export const FormBase = ({ data, setData }: Props) => {
                     <Label>
                         Sex <span className="text-red-600">*</span>
                     </Label>
+
                     <Select
-                        value={data.sex}
+                        key={data.sex}
+                        defaultValue={data.sex}
                         onValueChange={(value) => setData('sex', value)}
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="sex" />
+                            <SelectValue placeholder="select sex" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="male">Male</SelectItem>
@@ -332,13 +392,19 @@ export const FormBase = ({ data, setData }: Props) => {
                         Civil Status <span className="text-red-600">*</span>
                     </Label>
                     <Select
-                        value={data.civil_status}
+                        defaultValue={data.civil_status || ''}
                         onValueChange={(value) =>
                             setData('civil_status', value)
                         }
                     >
                         <SelectTrigger>
-                            <SelectValue placeholder="civil status" />
+                            <SelectValue
+                                placeholder={
+                                    data.civil_status
+                                        ? data.civil_status.toLocaleUpperCase()
+                                        : 'select civil status'
+                                }
+                            />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="single">Single</SelectItem>
@@ -361,7 +427,7 @@ export const FormBase = ({ data, setData }: Props) => {
                             >
                                 <CalendarIcon className="mr-2 h-4 w-4" />
                                 {data.date_of_birth
-                                    ? data.date_of_birth
+                                    ? dateFormat(data.date_of_birth)
                                     : 'mm / dd / yyyy'}
                             </Button>
                         </PopoverTrigger>
