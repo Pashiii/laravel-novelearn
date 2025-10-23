@@ -37,7 +37,6 @@ export default function Index({ filters, teachers }: Props) {
         get(route('teacher.index'));
     };
 
-    console.log(teachers);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Teachers" />
@@ -91,9 +90,15 @@ export default function Index({ filters, teachers }: Props) {
                                     </div>
                                 </CardHeader>
                                 <CardContent className="space-y-2">
-                                    <Button className="w-full bg-green-900 text-white">
-                                        View
-                                    </Button>
+                                    <Link
+                                        href={route('teacher.show', {
+                                            tutor: teacher.id,
+                                        })}
+                                    >
+                                        <Button className="w-full bg-green-900 text-white">
+                                            View
+                                        </Button>
+                                    </Link>
                                 </CardContent>
                             </Card>
                         ))}
