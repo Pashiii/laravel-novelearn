@@ -26,6 +26,7 @@ interface Props {
     routeName: string;
     params?: Record<string, any>;
     className?: string;
+    text?: string;
 }
 
 export const DeleteAlert: React.FC<Props> = ({
@@ -33,6 +34,7 @@ export const DeleteAlert: React.FC<Props> = ({
     routeName,
     className,
     params,
+    text,
 }) => {
     const { delete: destroy } = useForm();
 
@@ -52,7 +54,7 @@ export const DeleteAlert: React.FC<Props> = ({
                         className,
                     )}
                 >
-                    Delete
+                    {text ? text : 'Delete'}
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
