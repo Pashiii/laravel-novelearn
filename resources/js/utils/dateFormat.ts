@@ -6,6 +6,12 @@ export function formatDate(dateString: string): string {
       day: 'numeric',
     });
   }
+
+
+  export function dateFormat(dateString: string): string{
+    if(!dateString) return '';
+    return new Date(dateString).toLocaleDateString()
+  }
   
   export function formatDateTime(dateString: string): string {
     if (!dateString) return '';
