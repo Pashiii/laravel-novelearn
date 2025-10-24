@@ -31,6 +31,9 @@ class Student extends Model
         'date_of_birth' => 'date',
     ];
 
+    protected $appends = ['full_name'];
+
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -41,7 +44,10 @@ class Student extends Model
         return $this->belongsTo(Address::class);
     }
 
-    // 🧮 Accessor: computed full name
+    public function enrollment(){
+        return $this->hasMany(Enrollment::class, 'student_number', 'student_number');
+    }
+
     public function getFullNameAttribute()
     {
         return "{$this->first_name} {$this->middle_name} {$this->last_name}";
