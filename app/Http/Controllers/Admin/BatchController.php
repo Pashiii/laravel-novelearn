@@ -23,10 +23,11 @@ class BatchController extends Controller
     }
 
     public function show($id) {
-        $batch = Batch::with('tutor:id,first_name,last_name, middle_name')->findOrFail($id);
-    
+        $batch = Batch::with('tutor:id,first_name,last_name, middle_name', 'enrollment.student')->findOrFail($id);
+        $enrolled = $batch->enrollment->pluck('student');
         return Inertia::render('Batch/ViewBatch',[
             'batch' => $batch,
+            'enrolled' => $enrolled,
         ]);
     }
 
