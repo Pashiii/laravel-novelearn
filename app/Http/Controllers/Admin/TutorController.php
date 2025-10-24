@@ -7,6 +7,7 @@ use App\Models\Address;
 use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -212,7 +213,12 @@ class TutorController extends Controller
                 Storage::disk('s3')->delete($tutor->image);
             }
         }
-        return $tutor->delete();
+        $user = $tutor->user();
+
+        $user->delete();        
+        $tutor->delete();
+        return redirect()->route("teacher.index")->with('success' , "Delete Tutor Successfully!");
+
     }
 
 }
