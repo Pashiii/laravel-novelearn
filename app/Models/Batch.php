@@ -30,7 +30,9 @@ class Batch extends Model
     {
         return $this->belongsTo(Tutor::class);
     }
-
+    public function enrollment(){
+        return $this->hasMany(Enrollment::class, 'batch_number', 'batch_number');
+    }
 
 
 }
