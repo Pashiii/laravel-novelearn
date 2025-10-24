@@ -140,11 +140,11 @@ export default function ViewTutor({ teacher }: Props) {
                         </CardHeader>
                         <CardContent className="space-y-3">
                             {/* Information */}
-                            <CardTitle className="my-5 text-center text-2xl">
+                            <CardTitle className="my-5 text-xl">
                                 Personal Information
                             </CardTitle>
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Email:{' '}
                                         <span className="font-normal">
@@ -152,7 +152,7 @@ export default function ViewTutor({ teacher }: Props) {
                                         </span>
                                     </h1>
                                 </div>
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Contact:{' '}
                                         <span className="font-normal capitalize">
@@ -160,7 +160,7 @@ export default function ViewTutor({ teacher }: Props) {
                                         </span>
                                     </h1>
                                 </div>
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Sex:{' '}
                                         <span className="font-normal capitalize">
@@ -170,7 +170,7 @@ export default function ViewTutor({ teacher }: Props) {
                                 </div>
                             </div>
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Date of Birth:{' '}
                                         <span className="font-normal capitalize">
@@ -178,7 +178,7 @@ export default function ViewTutor({ teacher }: Props) {
                                         </span>
                                     </h1>
                                 </div>
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Nationality:{' '}
                                         <span className="font-normal capitalize">
@@ -186,7 +186,7 @@ export default function ViewTutor({ teacher }: Props) {
                                         </span>
                                     </h1>
                                 </div>
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Civil Status:{' '}
                                         <span className="font-normal capitalize">
@@ -196,11 +196,11 @@ export default function ViewTutor({ teacher }: Props) {
                                 </div>
                             </div>
                             {/* Address Details */}
-                            <CardTitle className="my-5 text-center text-2xl">
+                            <CardTitle className="my-5 text-xl">
                                 Address
                             </CardTitle>
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Street:{' '}
                                         <span className="font-normal capitalize">
@@ -208,7 +208,7 @@ export default function ViewTutor({ teacher }: Props) {
                                         </span>{' '}
                                     </h1>
                                 </div>
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Barangay:{' '}
                                         <span className="font-normal capitalize">
@@ -216,7 +216,7 @@ export default function ViewTutor({ teacher }: Props) {
                                         </span>
                                     </h1>
                                 </div>
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         City:{' '}
                                         <span className="font-normal capitalize">
@@ -226,7 +226,7 @@ export default function ViewTutor({ teacher }: Props) {
                                 </div>
                             </div>
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Province:{' '}
                                         <span className="font-normal capitalize">
@@ -234,7 +234,7 @@ export default function ViewTutor({ teacher }: Props) {
                                         </span>
                                     </h1>
                                 </div>
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Region:{' '}
                                         <span className="font-normal capitalize">
@@ -242,7 +242,7 @@ export default function ViewTutor({ teacher }: Props) {
                                         </span>
                                     </h1>
                                 </div>
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         District:{' '}
                                         <span className="font-normal capitalize">
@@ -252,11 +252,11 @@ export default function ViewTutor({ teacher }: Props) {
                                 </div>
                             </div>
                             {/* Birth Place */}
-                            <CardTitle className="my-5 text-center text-2xl">
+                            <CardTitle className="my-5 text-xl">
                                 Birth Place
                             </CardTitle>
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         City:{' '}
                                         <span className="font-normal capitalize">
@@ -264,7 +264,7 @@ export default function ViewTutor({ teacher }: Props) {
                                         </span>
                                     </h1>
                                 </div>
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Province:{' '}
                                         <span className="font-normal capitalize">
@@ -272,7 +272,7 @@ export default function ViewTutor({ teacher }: Props) {
                                         </span>
                                     </h1>
                                 </div>
-                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center">
+                                <div className="flex-shrink flex-grow basis-[20rem] rounded-lg bg-gray-100 p-3 text-center dark:bg-neutral-800">
                                     <h1 className="font-bold">
                                         Region:{' '}
                                         <span className="font-normal capitalize">

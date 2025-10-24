@@ -48,7 +48,7 @@ export default function Create() {
         post(route('teacher.store'), {
             onSuccess: () => {
                 reset();
-                toast.success('Teacher added account successfully');
+                toast.success('Teacher created successfully');
             },
         });
     };

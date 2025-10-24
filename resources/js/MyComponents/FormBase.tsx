@@ -393,18 +393,13 @@ export const FormBase = ({ data, setData, edit = false }: Props) => {
                     </Label>
                     <Select
                         defaultValue={data.civil_status || ''}
+                        key={data.civil_status}
                         onValueChange={(value) =>
                             setData('civil_status', value)
                         }
                     >
                         <SelectTrigger>
-                            <SelectValue
-                                placeholder={
-                                    data.civil_status
-                                        ? data.civil_status.toLocaleUpperCase()
-                                        : 'select civil status'
-                                }
-                            />
+                            <SelectValue placeholder="select civil status" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="single">Single</SelectItem>

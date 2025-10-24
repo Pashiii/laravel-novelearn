@@ -6,10 +6,18 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { Batch, type BreadcrumbItem } from '@/types';
 import { formatTime } from '@/utils/timeFormat';
-import { Head } from '@inertiajs/react';
+import { Head, WhenVisible } from '@inertiajs/react';
 import { Printer } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -25,16 +33,20 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface Props {
     batch: Batch;
+    enrolled: {
+        student_number: string;
+        first_name: string;
+        last_name: string;
+    }[];
 }
 
-export default function ViewBatch({ batch }: Props) {
+export default function ViewBatch({ batch, enrolled }: Props) {
     const scheduleArray = Array.isArray(batch.schedule)
         ? batch.schedule
         : JSON.parse(batch.schedule);
 
     const batchSchedule = scheduleArray.join(', ');
 
-    console.log(batch);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Batch Details" />
@@ -96,9 +108,48 @@ export default function ViewBatch({ batch }: Props) {
                             Enrolled Students
                         </CardTitle>
                         <Separator className="mt-2 border-1" />
-                        <CardTitle className="my-5 font-thin text-gray-600">
-                            No students enrolled in this batch.
-                        </CardTitle>
+                        <WhenVisible
+                            data="enrolled"
+                            fallback={() => <div>Loading...</div>}
+                        >
+                            {enrolled.length ? (
+                                <div className="w-full overflow-hidden rounded-md border">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow className="bg-gray-100">
+                                                <TableHead>
+                                                    Student Number
+                                                </TableHead>
+                                                <TableHead>
+                                                    First Name
+                                                </TableHead>
+                                                <TableHead>Last Name</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+
+                                        <TableBody>
+                                            {enrolled.map((details, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell className="font-medium">
+                                                        {details.student_number}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {details.first_name}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {details.last_name}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            ) : (
+                                <CardTitle className="my-5 font-thin text-gray-600">
+                                    No students enrolled in this batch.
+                                </CardTitle>
+                            )}
+                        </WhenVisible>
                     </CardFooter>
                 </Card>
             </div>
