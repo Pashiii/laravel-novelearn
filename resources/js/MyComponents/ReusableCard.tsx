@@ -36,7 +36,7 @@ export default function ReusableCard({
                 </CardDescription>
             </CardHeader>
 
-            <CardContent className="space-y-2">{actions}</CardContent>
+            <CardContent className="mt-auto space-y-2">{actions}</CardContent>
         </Card>
     );
 }

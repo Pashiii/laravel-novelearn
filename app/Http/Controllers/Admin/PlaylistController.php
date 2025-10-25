@@ -21,7 +21,9 @@ class PlaylistController extends Controller
         $user = Auth::user();
         $playlists = $this->playlistRepository->getAllPlaylistsWithLessonCount();
 
-        return Inertia::render('Playlist/Index', compact('playlists'));
+        return Inertia::render('Playlist/Index', [
+            'playlists' => Inertia::defer(fn() => $playlists, sleep(1))
+        ]);
     }
 
     public function show($id)

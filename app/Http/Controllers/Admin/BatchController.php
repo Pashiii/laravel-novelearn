@@ -18,7 +18,10 @@ class BatchController extends Controller
         return Inertia::render('Batch/Index', [
             'playlists' => $playlists,
             'tutors' => $tutors,
-            'batches' => $batches
+            'batches' => Inertia::defer(function () use ($batches) {
+                sleep(1); 
+                return $batches;
+            }),
         ]);
     }
 
@@ -26,7 +29,10 @@ class BatchController extends Controller
         $batch = Batch::with('tutor:id,first_name,last_name, middle_name', 'enrollment.student')->findOrFail($id);
         $enrolled = $batch->enrollment->pluck('student');
         return Inertia::render('Batch/ViewBatch',[
-            'batch' => $batch,
+            'batch' => Inertia::defer(function () use ($batch) {
+                    sleep(1); 
+                    return $batch;
+                }),
             'enrolled' => $enrolled,
         ]);
     }

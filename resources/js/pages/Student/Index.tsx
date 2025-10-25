@@ -8,9 +8,9 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
-import { Loading } from '@/MyComponents/Loading';
+import { UserSkeletonCard } from '@/MyComponents/UserSkeletonCard';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm, WhenVisible } from '@inertiajs/react';
+import { Deferred, Head, Link, useForm } from '@inertiajs/react';
 import { SearchIcon } from 'lucide-react';
 import { route } from 'ziggy-js';
 
@@ -35,7 +35,7 @@ interface Props {
     };
 }
 
-export default function Index({ students, filters }: Props) {
+export default function Index({ filters, students }: Props) {
     const { data, setData, get } = useForm({
         search: filters.search || '',
     });
@@ -44,10 +44,11 @@ export default function Index({ students, filters }: Props) {
         e.preventDefault();
         get(route('student.index'));
     };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Students" />
-            <WhenVisible data="students" fallback={() => <Loading />}>
+            <Deferred data="students" fallback={() => <UserSkeletonCard />}>
                 <div className="mx-auto w-full max-w-6xl">
                     <div className="m-5">
                         <div className="mr-10 mb-5 flex justify-end">
@@ -79,7 +80,7 @@ export default function Index({ students, filters }: Props) {
                             </div>
                         </form>
                         <div className="grid auto-rows-fr gap-5 min-[490px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3">
-                            {students.data.map((student, index) => (
+                            {students?.data?.map((student, index) => (
                                 <Card
                                     className="overflow-hidden shadow-md transition hover:shadow-lg"
                                     key={index}
@@ -102,7 +103,7 @@ export default function Index({ students, filters }: Props) {
                                             </div>
                                         </div>
                                     </CardHeader>
-                                    <CardContent className="space-y-2">
+                                    <CardContent className="mt-auto space-y-2">
                                         <Link
                                             href={route('student.show', {
                                                 student: student.id,
@@ -118,7 +119,7 @@ export default function Index({ students, filters }: Props) {
                         </div>
                     </div>
                 </div>
-            </WhenVisible>
+            </Deferred>
         </AppLayout>
     );
 }

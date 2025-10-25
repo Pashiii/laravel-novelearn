@@ -15,9 +15,10 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
+import { BatchSkeleton } from '@/MyComponents/BatchSkeleton';
 import { Batch, type BreadcrumbItem } from '@/types';
 import { formatTime } from '@/utils/timeFormat';
-import { Head, WhenVisible } from '@inertiajs/react';
+import { Deferred, Head } from '@inertiajs/react';
 import { Printer } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -41,77 +42,78 @@ interface Props {
 }
 
 export default function ViewBatch({ batch, enrolled }: Props) {
-    const scheduleArray = Array.isArray(batch.schedule)
-        ? batch.schedule
-        : JSON.parse(batch.schedule);
+    const scheduleArray =
+        batch && batch.schedule
+            ? Array.isArray(batch.schedule)
+                ? batch.schedule
+                : JSON.parse(batch.schedule)
+            : [];
 
     const batchSchedule = scheduleArray.join(', ');
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Batch Details" />
-            <div className="mx-auto w-full max-w-4xl p-4">
-                <Card>
-                    <CardHeader className="mt-5">
-                        <div className="relative flex items-center justify-between">
-                            <CardTitle className="absolute left-1/2 -translate-x-1/2 text-xl sm:text-2xl">
-                                Batch Details
-                            </CardTitle>
+            <Deferred data="batch" fallback={() => <BatchSkeleton />}>
+                <div className="mx-auto w-full max-w-4xl p-4">
+                    <Card>
+                        <CardHeader className="mt-5">
+                            <div className="relative flex items-center justify-between">
+                                <CardTitle className="absolute left-1/2 -translate-x-1/2 text-xl sm:text-2xl">
+                                    Batch Details
+                                </CardTitle>
 
-                            <div className="ml-auto flex w-13 items-center justify-center rounded-md bg-green-900 p-2 duration-300 hover:scale-110">
-                                <Printer
-                                    color="white"
-                                    strokeWidth={2}
-                                    size={25}
-                                />
+                                <div className="ml-auto flex w-13 items-center justify-center rounded-md bg-green-900 p-2 duration-300 hover:scale-110">
+                                    <Printer
+                                        color="white"
+                                        strokeWidth={2}
+                                        size={25}
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <Separator className="mt-2 border-1" />
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        <CardTitle>
-                            Batch Number:{' '}
-                            <span className="font-thin">
-                                {batch.batch_number}
-                            </span>
-                        </CardTitle>
-                        <div className="mt-3 space-y-2 text-center text-base">
+                            <Separator className="mt-2 border-1" />
+                        </CardHeader>
+                        <CardContent className="space-y-2">
                             <CardTitle>
-                                Batch Title:{' '}
+                                Batch Number:{' '}
                                 <span className="font-thin">
-                                    {batch.course_title}
+                                    {batch?.batch_number}
                                 </span>
                             </CardTitle>
-                            <CardTitle>
-                                Schedule:{' '}
-                                <span className="font-thin">
-                                    {batchSchedule}
-                                </span>
+                            <div className="mt-3 space-y-2 text-center text-base">
+                                <CardTitle>
+                                    Batch Title:{' '}
+                                    <span className="font-thin">
+                                        {batch?.course_title}
+                                    </span>
+                                </CardTitle>
+                                <CardTitle>
+                                    Schedule:{' '}
+                                    <span className="font-thin">
+                                        {batchSchedule}
+                                    </span>
+                                </CardTitle>
+                                <CardTitle>
+                                    Time:{' '}
+                                    <span className="font-thin">
+                                        {`${formatTime(batch?.start_time)} - ${formatTime(batch?.end_time)}`}
+                                    </span>
+                                </CardTitle>
+                                <CardTitle>
+                                    Tutor:{' '}
+                                    <span className="font-thin">
+                                        {`${batch?.tutor?.first_name} ${batch?.tutor?.middle_name ? batch.tutor?.middle_name : ''} ${batch?.tutor?.last_name}`}
+                                    </span>
+                                </CardTitle>
+                            </div>
+                        </CardContent>
+                        <CardFooter className="flex-col gap-2">
+                            <CardTitle className="text-xl sm:text-2xl">
+                                Enrolled Students
                             </CardTitle>
-                            <CardTitle>
-                                Time:{' '}
-                                <span className="font-thin">
-                                    {`${formatTime(batch.start_time)} - ${formatTime(batch.end_time)}`}
-                                </span>
-                            </CardTitle>
-                            <CardTitle>
-                                Tutor:{' '}
-                                <span className="font-thin">
-                                    {`${batch.tutor?.first_name} ${batch.tutor?.middle_name ? batch.tutor?.middle_name : ''} ${batch.tutor?.last_name}`}
-                                </span>
-                            </CardTitle>
-                        </div>
-                    </CardContent>
-                    <CardFooter className="flex-col gap-2">
-                        <CardTitle className="text-xl sm:text-2xl">
-                            Enrolled Students
-                        </CardTitle>
-                        <Separator className="mt-2 border-1" />
-                        <WhenVisible
-                            data="enrolled"
-                            fallback={() => <div>Loading...</div>}
-                        >
+                            <Separator className="mt-2 border-1" />
+
                             {enrolled.length ? (
                                 <div className="w-full overflow-hidden rounded-md border">
                                     <Table>
@@ -149,10 +151,10 @@ export default function ViewBatch({ batch, enrolled }: Props) {
                                     No students enrolled in this batch.
                                 </CardTitle>
                             )}
-                        </WhenVisible>
-                    </CardFooter>
-                </Card>
-            </div>
+                        </CardFooter>
+                    </Card>
+                </div>
+            </Deferred>
         </AppLayout>
     );
 }

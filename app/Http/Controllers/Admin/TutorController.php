@@ -32,8 +32,11 @@ class TutorController extends Controller
         ]);
         
         return Inertia::render('Teacher/Index', [
-            'teachers' => $teachers,
-            'filters' => [
+                'teachers' => Inertia::defer(function () use ($teachers) {
+                    sleep(1); 
+                    return $teachers;
+                }),            
+                'filters' => [
                 'search' => $search
             ],
         ]);
@@ -42,7 +45,10 @@ class TutorController extends Controller
         $tutor->load('address');
 
         return Inertia::render('Teacher/ViewTutor', [
-            'teacher' => $tutor,
+            'teacher' => Inertia::defer(function () use ($tutor) {
+                sleep(1); 
+                return $tutor;
+            }),   
         ]);
         }
         

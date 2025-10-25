@@ -33,7 +33,10 @@ class StudentController extends Controller
             'full_name' => trim("{$student->first_name} " . ($student->middle_name ? substr($student->middle_name, 0, 1) . '. ' : '') . "{$student->last_name}"),
         ]);
         return Inertia::render('Student/Index', [
-            'students' => $students,
+            'students' => Inertia::defer(function() use($students) {
+                sleep(1); 
+                return $students;
+            }),
             'filters' => [
                 'search' => $search
             ],
@@ -160,8 +163,10 @@ class StudentController extends Controller
         $student->load('address');
 
         return Inertia::render('Student/View', [
-            'student' => $student,
-        ]);
+            'student' => Inertia::defer(function() use($student) {
+                sleep(1); 
+                return $student;
+            }),        ]);
     }
 
     public function edit(Student $student){
