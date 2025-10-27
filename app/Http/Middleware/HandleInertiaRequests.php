@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -44,6 +45,11 @@ class HandleInertiaRequests extends Middleware
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
+                'can' => [
+                    'createPlaylist' => Gate::allows('create', \App\Models\Playlist::class),
+                    'deletePlaylist' => Gate::allows('deleteAnyPlaylist'),
+                    'updatePlaylist' => Gate::allows('updateAnyPlaylist'),
+                ],
             ],
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),

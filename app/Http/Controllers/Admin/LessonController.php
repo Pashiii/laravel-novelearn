@@ -7,12 +7,14 @@ use App\Http\Requests\Lesson\LessonRequest;
 use App\Interfaces\LessonRepositoryInterface;
 use App\Models\Lesson;
 use App\Models\Playlist;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class LessonController extends Controller
 {
+    use AuthorizesRequests; 
 
     protected $lessonRepository;
     public function __construct(LessonRepositoryInterface $lessonRepository){
@@ -22,6 +24,7 @@ class LessonController extends Controller
     {
         $playlist->loadCount('lesson'); 
         $lessons = $this->lessonRepository->getLessonByPlaylist($playlist);
+        $this->authorize('view', $playlist);
 
         return Inertia::render('Playlist/ViewPlaylist', [
             'playlist' => $playlist,
