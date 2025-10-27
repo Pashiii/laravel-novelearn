@@ -11,4 +11,7 @@ class Playlist extends Model
     public function lesson(){
         return $this->hasMany(Lesson::class);
     }
+    public function batches(){
+        return $this->hasMany(Batch:: class, 'course_id', 'course_id');
+    }
 }

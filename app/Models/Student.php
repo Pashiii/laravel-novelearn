@@ -47,6 +47,10 @@ class Student extends Model
     public function enrollment(){
         return $this->hasMany(Enrollment::class, 'student_number', 'student_number');
     }
+    public function batches()
+{
+    return $this->belongsToMany(Batch::class, 'enrollment');
+}
 
     public function getFullNameAttribute()
     {

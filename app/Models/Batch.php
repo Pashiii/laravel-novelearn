@@ -30,6 +30,12 @@ class Batch extends Model
     {
         return $this->belongsTo(Tutor::class);
     }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'enrollment', 'student_number');
+    }
+
     public function enrollment(){
         return $this->hasMany(Enrollment::class, 'batch_number', 'batch_number');
     }

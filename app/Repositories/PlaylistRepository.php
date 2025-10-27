@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Playlist;
 use App\Interfaces\PlaylistRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 //use Your Model
@@ -22,6 +23,21 @@ class PlaylistRepository implements PlaylistRepositoryInterface
     {
         return Playlist::findOrFail($id);
     }
+    public function getPlaylistsForUser(\App\Models\User $user): Collection{
+        if (in_array($user->role, ['teacher', 'admin'])) {
+            return $this->getAllPlaylistsWithLessonCount();
+        }
+    
+        $studentNumber = $user->student->student_number;
+        return Playlist::whereHas('batches', function ($batchQuery) use ($studentNumber) {
+            $batchQuery
+                ->where('status', 1) 
+                ->whereHas('enrollment', function ($enrollQuery) use ($studentNumber) {
+                    $enrollQuery->where('student_number', $studentNumber);
+                });
+        })->get();
+}
+
     public function create(array $data, $thumb = null) : Playlist
     {
         if ($data['thumb']) {
