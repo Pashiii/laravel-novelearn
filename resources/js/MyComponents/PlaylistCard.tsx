@@ -8,15 +8,25 @@ import { UpdatePlaylistDialog } from './UpdatePlaylistDialog';
 
 interface PlaylistCardProps {
     playlist: Playlists;
+    auth: {
+        can: {
+            createPlaylist: boolean;
+            deletePlaylist: boolean;
+            updatePlaylist: boolean;
+        };
+    };
 }
 
-const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist }) => {
+const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist, auth }) => {
     const PlaylistActions = (
         <>
             <div className="grid grid-cols-2 gap-2">
-                <UpdatePlaylistDialog playlist={playlist} />
-
-                <DeleteAlert data={playlist} routeName="playlist.destroy" />
+                {auth.can.updatePlaylist && (
+                    <UpdatePlaylistDialog playlist={playlist} />
+                )}
+                {auth.can.deletePlaylist && (
+                    <DeleteAlert data={playlist} routeName="playlist.destroy" />
+                )}
             </div>
             <Link
                 href={route('lesson.index', {

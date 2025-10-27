@@ -55,7 +55,7 @@ class BatchController extends Controller
         $validated['status'] = $validated['status'] === 'active' ? true : false;
 
         $batch = Batch::create($validated);
-        return redirect()->back()->with('success', 'Batch created successfully!');
+        // return redirect()->back()->with('success', 'Batch created successfully!');
     }
 
     public function update(Request $request, Batch $batch){

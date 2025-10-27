@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     BookOpen,
     BookText,
@@ -24,31 +24,36 @@ import {
 } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
+const allNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+        roles: ['student', 'admin', 'teacher'],
     },
     {
         title: 'Courses',
         href: '/playlist',
         icon: BookText,
+        roles: ['admin', 'student', 'teacher'],
     },
     {
         title: 'Batch List',
         href: '/batch',
         icon: ClipboardList,
+        roles: ['admin', 'teacher'],
     },
     {
         title: 'Teachers',
         href: '/teachers',
         icon: School,
+        roles: ['admin'],
     },
     {
         title: 'Students',
         href: '/students',
         icon: BookUser,
+        roles: ['admin', 'teacher'],
     },
 ];
 
@@ -66,6 +71,13 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage<{ auth: { user: { role: string } } }>().props;
+    const role = auth?.user?.role ?? '';
+
+    // ✅ Filter items by role
+    const mainNavItems = allNavItems.filter((item) =>
+        item.roles?.includes(role),
+    );
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

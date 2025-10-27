@@ -7,7 +7,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,7 +16,12 @@ import React, { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
-export const CreatePlaylistDialog = () => {
+interface Props {
+    isOpen: boolean;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const CreatePlaylistDialog = ({ setIsOpen, isOpen }: Props) => {
     const { data, setData, post, processing, reset, errors } = useForm({
         course_id: '',
         title: '',
@@ -33,7 +37,7 @@ export const CreatePlaylistDialog = () => {
             forceFormData: true,
             onSuccess: () => {
                 reset();
-                closeButtonRef.current?.click();
+                setIsOpen((prev) => !prev);
                 toast.success('Course created successfully!');
             },
         });
@@ -48,17 +52,9 @@ export const CreatePlaylistDialog = () => {
 
     useEffect(() => {
         generateCourseId();
-    }, []);
+    }, [isOpen]);
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button
-                    className="bg-green-900 px-10 py-6 text-sm text-white"
-                    onClick={() => generateCourseId()}
-                >
-                    Add Course
-                </Button>
-            </DialogTrigger>
+        <Dialog onOpenChange={setIsOpen} open={isOpen}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Create Course</DialogTitle>
@@ -100,6 +96,7 @@ export const CreatePlaylistDialog = () => {
                             name="title"
                             placeholder="Enter playlist title"
                             value={data.title}
+                            required
                             className={`${errors.title && data.title.length <= 0 ? 'border-red-600' : ''}`}
                             onChange={(e) => setData('title', e.target.value)}
                         />
@@ -120,6 +117,7 @@ export const CreatePlaylistDialog = () => {
                             placeholder="Write description"
                             className={`${errors.description && data.description.length <= 0 ? 'border-red-600' : ''}`}
                             value={data.description}
+                            required
                             onChange={(e) =>
                                 setData('description', e.target.value)
                             }
@@ -153,6 +151,7 @@ export const CreatePlaylistDialog = () => {
                             name="hours"
                             type="number"
                             placeholder="Enter playlist title"
+                            required
                             className={`${errors.hours && data.hours.length <= 0 ? 'border-red-600' : ''}`}
                             value={data.hours}
                             onChange={(e) => setData('hours', e.target.value)}

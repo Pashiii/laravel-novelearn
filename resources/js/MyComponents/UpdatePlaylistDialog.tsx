@@ -92,6 +92,7 @@ export const UpdatePlaylistDialog: React.FC<Props> = ({
                             id="title"
                             name="title"
                             placeholder="Enter playlist title"
+                            required
                             value={data.title}
                             className={`${errors.title && data.title.length <= 0 ? 'border-red-600' : ''}`}
                             onChange={(e) => setData('title', e.target.value)}
@@ -111,6 +112,7 @@ export const UpdatePlaylistDialog: React.FC<Props> = ({
                             id="description"
                             name="description"
                             placeholder="Write description"
+                            required
                             className={`${errors.description && data.description.length <= 0 ? 'border-red-600' : ''}`}
                             value={data.description}
                             onChange={(e) =>
@@ -150,6 +152,7 @@ export const UpdatePlaylistDialog: React.FC<Props> = ({
                             id="hours"
                             name="hours"
                             type="number"
+                            required
                             placeholder="Enter playlist title"
                             className={`${errors.hours && data.hours.length <= 0 ? 'border-red-600' : ''}`}
                             value={data.hours}
