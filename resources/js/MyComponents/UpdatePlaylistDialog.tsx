@@ -153,7 +153,7 @@ export const UpdatePlaylistDialog: React.FC<Props> = ({
                             name="hours"
                             type="number"
                             required
-                            placeholder="Enter playlist title"
+                            placeholder="Enter total hours"
                             className={`${errors.hours && data.hours.length <= 0 ? 'border-red-600' : ''}`}
                             value={data.hours}
                             onChange={(e) => setData('hours', e.target.value)}

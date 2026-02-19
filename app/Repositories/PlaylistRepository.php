@@ -29,13 +29,21 @@ class PlaylistRepository implements PlaylistRepositoryInterface
         }
     
         $studentNumber = $user->student->student_number;
-        return Playlist::whereHas('batches', function ($batchQuery) use ($studentNumber) {
+        return Playlist::with(['batches' => function ($batchQuery) use ($studentNumber) {
             $batchQuery
-                ->where('status', 1) 
-                ->whereHas('enrollment', function ($enrollQuery) use ($studentNumber) {
-                    $enrollQuery->where('student_number', $studentNumber);
+                ->where('status', 1)
+                ->whereHas('enrollment', function ($q) use ($studentNumber) {
+                    $q->where('student_number', $studentNumber);
                 });
-        })->get();
+        }])
+        // ->whereHas('batches', function ($batchQuery) use ($studentNumber) {
+        //     $batchQuery
+        //         ->where('status', 1) 
+        //         ->whereHas('enrollment', function ($enrollQuery) use ($studentNumber) {
+        //             $enrollQuery->where('student_number', $studentNumber);
+        //         });
+        // })
+        ->get();
 }
 
     public function create(array $data, $thumb = null) : Playlist

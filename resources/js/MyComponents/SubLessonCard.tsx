@@ -15,52 +15,95 @@ interface FileItem {
 interface SubLessonCardProps {
     id: number;
     lessonId: number;
+    playlistId: number;
     title: string;
     instruction?: string;
     thumbnail?: string;
     files?: FileItem[];
     url?: string[];
     type: string;
+    batchId: number;
+    auth: {
+        can: {
+            createPlaylist: boolean;
+            deletePlaylist: boolean;
+            updatePlaylist: boolean;
+        };
+        user: {
+            id: number;
+            name: string;
+            role: string;
+        } | null;
+    };
 }
 
 export const SubLessonCard: React.FC<SubLessonCardProps> = ({
     id,
     title,
     lessonId,
+    playlistId,
     instruction,
     thumbnail,
     files,
     url,
     type,
+    auth,
+    batchId,
 }) => {
+    const isStudent = auth.user?.role === 'student';
+
     const SubLessonActions = (
         <>
             <div className="grid grid-cols-2 gap-2">
-                <UpdateSubLessonDialog
-                    subLesson={{
-                        id: id,
-                        lesson_id: lessonId,
-                        instruction: instruction,
-                        title: title,
-                        files: files,
-                        url: url,
-                        type: type,
-                    }}
-                />
-                <DeleteAlert
-                    data={{ id, title }}
-                    params={{ lesson: lessonId, id: id }}
-                    routeName="sub_lesson.destroy"
-                />
+                {auth.can.updatePlaylist && (
+                    <UpdateSubLessonDialog
+                        playlist_id={playlistId}
+                        subLesson={{
+                            id: id,
+                            lesson_id: lessonId,
+                            instruction: instruction,
+                            title: title,
+                            files: files,
+                            url: url,
+                            type: type,
+                        }}
+                    />
+                )}
+                {auth.can.deletePlaylist && (
+                    <DeleteAlert
+                        data={{ id, title }}
+                        params={{ lesson: lessonId, id: id }}
+                        routeName="sub_lesson.destroy"
+                    />
+                )}
             </div>
-            <Link
-                href={route('sub_lesson.show', {
-                    lesson: lessonId,
-                    subLesson: id,
-                })}
-            >
-                <Button className="w-full bg-green-900 text-white">View</Button>
-            </Link>
+            {batchId && isStudent ? (
+                <Link
+                    href={route('sub_lesson.show', {
+                        playlist: playlistId,
+                        lesson: lessonId,
+                        subLesson: id,
+                        batchId: batchId,
+                    })}
+                >
+                    <Button className="w-full bg-green-900 text-white">
+                        View
+                    </Button>
+                </Link>
+            ) : (
+                <Link
+                    href={route('sub_lesson.show', {
+                        playlist: playlistId,
+                        lesson: lessonId,
+                        subLesson: id,
+                        batchId: undefined,
+                    })}
+                >
+                    <Button className="w-full bg-green-900 text-white">
+                        View
+                    </Button>
+                </Link>
+            )}
         </>
     );
     return (

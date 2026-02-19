@@ -20,35 +20,47 @@ class LessonController extends Controller
     public function __construct(LessonRepositoryInterface $lessonRepository){
         $this->lessonRepository = $lessonRepository;
     }
-    public function index(Playlist $playlist)
+    public function index(Playlist $playlist, $batchId = null)
     {
+        $this->authorize('view', $playlist);
+
         $playlist->loadCount('lesson'); 
         $lessons = $this->lessonRepository->getLessonByPlaylist($playlist);
-        $this->authorize('view', $playlist);
 
         return Inertia::render('Playlist/ViewPlaylist', [
             'playlist' => $playlist,
-            'lessons' => $lessons,
+            'batchId' => $batchId,
+            'lessons' => Inertia::defer(function () use ($lessons) {
+                sleep(1); 
+                return $lessons;
+            }),
         ]);
+        
     }
 
     public function store(LessonRequest $request, Playlist $playlist)
     {
 
+        $this->authorize('create', Lesson::class);
+        $this->authorize('view', $playlist);
+    
         $this->lessonRepository->storeLesson($playlist, $request->validated());
 
         return redirect()->back()->with('success', 'Lesson created successfully!');
     }
 
-    public function destroy(Playlist $playlist, $id)
-    {
-        $this->lessonRepository->deleteLesson($playlist, $id);
+    public function destroy(Playlist $playlist, Lesson $lesson)
+    {   
+        $this->authorize('update', $lesson);
+
+        $this->lessonRepository->deleteLesson($playlist, $lesson->id);
 
         return redirect()->route('lesson.index', ['playlist' => $playlist->id])->with('message', 'Lesson deleted sucessfully!');
     }
 
     public function update(LessonRequest $request, Playlist $playlist, Lesson $lesson)
     {
+        $this->authorize('update', $lesson);
         $this->lessonRepository->updateLesson($lesson, $request->validated());
     }
 }

@@ -27,6 +27,7 @@ import { route } from 'ziggy-js';
 import AttachmentUploader from './AttachmentUploader';
 
 interface Props {
+    playlist_id: number;
     subLesson: SubLesson;
 }
 interface FileItem {
@@ -36,7 +37,10 @@ interface FileItem {
     file_type: string;
 }
 
-export const UpdateSubLessonDialog: React.FC<Props> = ({ subLesson }) => {
+export const UpdateSubLessonDialog: React.FC<Props> = ({
+    playlist_id,
+    subLesson,
+}) => {
     const { data, setData, post, errors, processing, reset } = useForm<{
         _method: 'PUT';
         title: string;
@@ -63,6 +67,7 @@ export const UpdateSubLessonDialog: React.FC<Props> = ({ subLesson }) => {
 
         post(
             route('sub_lesson.update', {
+                playlist: playlist_id,
                 lesson: subLesson.lesson_id,
                 subLesson: subLesson.id,
             }),

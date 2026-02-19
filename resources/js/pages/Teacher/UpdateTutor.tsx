@@ -134,6 +134,7 @@ export default function UpdateTutor({ teacher }: Props) {
                                     <Label>Upload 1x1 Photo</Label>
                                     <Input
                                         type="file"
+                                        accept="image/*"
                                         onChange={(e) =>
                                             setData(
                                                 'image',

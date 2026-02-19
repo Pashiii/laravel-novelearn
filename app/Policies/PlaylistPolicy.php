@@ -13,7 +13,7 @@ class PlaylistPolicy
      */
     private function isAdminOrTeacher(User $user): bool
     {
-        return in_array($user->role, ['admin', 'teacher']);
+        return in_array($user->role, haystack: ['admin', 'teacher']);
     }
 
 
@@ -52,11 +52,7 @@ class PlaylistPolicy
      */
     public function create(User $user): bool
     {   
-      if (in_array($user->role, ['admin', 'teacher'])) {
-            return true;
-        }
-        return false;
-
+        return $this->isAdminOrTeacher(user: $user);
 
     }
 
@@ -65,10 +61,7 @@ class PlaylistPolicy
      */
     public function update(User $user, Playlist $playlist): bool
     {
-        if($user->role === 'student'){
-            return false;
-        }
-return true;
+        return $this->isAdminOrTeacher($user);
     }
 
     /**
@@ -78,6 +71,14 @@ return true;
     {
         return $this->isAdminOrTeacher($user);
     }
+
+        public function updateAny(User $user): bool
+    {
+        return $this->isAdminOrTeacher($user);    }
+
+    public function deleteAny(User $user): bool
+    {
+        return $this->isAdminOrTeacher($user);    }
 
     /**
      * Determine whether the user can restore the model.

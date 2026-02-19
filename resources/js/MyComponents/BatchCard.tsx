@@ -34,7 +34,6 @@ export default function BatchCard({
         ? batch.schedule
         : JSON.parse(batch.schedule);
     const batchSched = scheduleArray.join(', ');
-    console.log(batch);
     return (
         <Card className="relative overflow-hidden shadow-md transition hover:shadow-lg">
             <CardHeader>

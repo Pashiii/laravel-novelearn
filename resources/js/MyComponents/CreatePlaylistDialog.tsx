@@ -150,7 +150,7 @@ export const CreatePlaylistDialog = ({ setIsOpen, isOpen }: Props) => {
                             id="hours"
                             name="hours"
                             type="number"
-                            placeholder="Enter playlist title"
+                            placeholder="Enter total hours"
                             required
                             className={`${errors.hours && data.hours.length <= 0 ? 'border-red-600' : ''}`}
                             value={data.hours}

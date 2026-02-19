@@ -28,12 +28,14 @@ import { route } from 'ziggy-js';
 import AttachmentUploader from './AttachmentUploader';
 
 interface Props {
+    playlist_id: number;
     lesson: Lesson;
     total: number;
     className?: string;
 }
 
 export const CreateSubLessonDialog: React.FC<Props> = ({
+    playlist_id,
     className,
     lesson,
     total,
@@ -58,17 +60,23 @@ export const CreateSubLessonDialog: React.FC<Props> = ({
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        post(route('sub_lesson.store', { lesson: lesson.id }), {
-            forceFormData: true,
-            onSuccess: () => {
-                reset();
-                closeButtonRef.current?.click();
-                toast.success('New material added!');
+        post(
+            route('sub_lesson.store', {
+                playlist: playlist_id,
+                lesson: lesson.id,
+            }),
+            {
+                forceFormData: true,
+                onSuccess: () => {
+                    reset();
+                    closeButtonRef.current?.click();
+                    toast.success('New material added!');
+                },
+                onError: () => {
+                    toast.error('Failed to create!');
+                },
             },
-            onError: () => {
-                toast.error('Failed to create!');
-            },
-        });
+        );
     };
 
     return (
@@ -76,7 +84,7 @@ export const CreateSubLessonDialog: React.FC<Props> = ({
             <DialogTrigger asChild>
                 <Button
                     className={cn(
-                        'h-11 w-full bg-green-900 text-lg text-white',
+                        'bg-green-900 px-10 py-6 text-sm text-white',
                         className,
                     )}
                 >

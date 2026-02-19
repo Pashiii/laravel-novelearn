@@ -14,12 +14,14 @@ import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
-    BookOpen,
     BookText,
     BookUser,
     ClipboardList,
-    Folder,
+    FileBadge,
+    Keyboard,
     LayoutGrid,
+    MessageCircle,
+    PanelTop,
     School,
 } from 'lucide-react';
 import AppLogo from './app-logo';
@@ -36,6 +38,18 @@ const allNavItems: NavItem[] = [
         href: '/playlist',
         icon: BookText,
         roles: ['admin', 'student', 'teacher'],
+    },
+    {
+        title: 'My Batch',
+        href: '/my-batch',
+        icon: ClipboardList,
+        roles: ['student'],
+    },
+    {
+        title: 'Shortcuts',
+        href: '/shortcuts',
+        icon: Keyboard,
+        roles: ['student'],
     },
     {
         title: 'Batch List',
@@ -55,26 +69,43 @@ const allNavItems: NavItem[] = [
         icon: BookUser,
         roles: ['admin', 'teacher'],
     },
+    {
+        title: 'Certificate',
+        href: '/certificate-settings',
+        icon: FileBadge,
+        roles: ['admin', 'teacher'],
+    },
+    {
+        title: 'Messages',
+        href: '/messages',
+        icon: MessageCircle,
+        roles: ['admin'],
+    },
+    {
+        title: 'Web Content',
+        href: '/web-content',
+        icon: PanelTop,
+        roles: ['admin'],
+    },
 ];
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
+    // {
+    //     title: 'Repository',
+    //     href: 'https://github.com/laravel/react-starter-kit',
+    //     icon: Folder,
+    // },
+    // {
+    //     title: 'Documentation',
+    //     href: 'https://laravel.com/docs/starter-kits#react',
+    //     icon: BookOpen,
+    // },
 ];
 
 export function AppSidebar() {
     const { auth } = usePage<{ auth: { user: { role: string } } }>().props;
     const role = auth?.user?.role ?? '';
 
-    // ✅ Filter items by role
     const mainNavItems = allNavItems.filter((item) =>
         item.roles?.includes(role),
     );

@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Lesson;
+use App\Models\Playlist;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -46,9 +48,13 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'can' => [
-                    'createPlaylist' => Gate::allows('create', \App\Models\Playlist::class),
-                    'deletePlaylist' => Gate::allows('deleteAnyPlaylist'),
-                    'updatePlaylist' => Gate::allows('updateAnyPlaylist'),
+                    'createPlaylist' => $request->user()?->can('create', Playlist::class),
+                    'updatePlaylist' => $request->user()?->can('updateAny', Playlist::class),
+                    'deletePlaylist' => $request->user()?->can('deleteAny', Playlist::class),
+                    'createLesson'   => $request->user()?->can('create', Lesson::class),
+                    'deleteLesson' => $request->user()?->can('deleteAny', Lesson::class),
+                    'updateLesson' => $request->user()?->can('updateAny', Lesson::class),
+
                 ],
             ],
             'flash' => [

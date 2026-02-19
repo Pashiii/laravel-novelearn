@@ -95,7 +95,6 @@ export default function Create({ batches, students }: Props) {
     useEffect(() => {
         setData('student_number', generateStudentNumber());
     }, []);
-    console.log(data);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Students" />
@@ -417,6 +416,7 @@ export default function Create({ batches, students }: Props) {
                                     <Label>Upload 1x1 Photo</Label>
                                     <Input
                                         type="file"
+                                        accept="image/*"
                                         onChange={(e) =>
                                             setData(
                                                 'image',

@@ -51,10 +51,15 @@ export default function Index({ filters, students }: Props) {
             <Deferred data="students" fallback={() => <UserSkeletonCard />}>
                 <div className="mx-auto w-full max-w-6xl">
                     <div className="m-5">
-                        <div className="mr-10 mb-5 flex justify-end">
+                        <div className="mr-10 mb-5 flex justify-end gap-2">
+                            <Link href={route('enrollment.index')}>
+                                <Button className="bg-green-900 px-10 py-6 text-sm text-white">
+                                    Enroll To Course
+                                </Button>
+                            </Link>
                             <Link href={route('student.create')}>
                                 <Button className="bg-green-900 px-10 py-6 text-sm text-white">
-                                    Add Student Account
+                                    Add Student
                                 </Button>
                             </Link>
                         </div>

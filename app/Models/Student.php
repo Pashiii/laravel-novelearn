@@ -31,7 +31,7 @@ class Student extends Model
         'date_of_birth' => 'date',
     ];
 
-    protected $appends = ['full_name'];
+    protected $appends = ['full_name', 'formatted_name'];
 
 
     public function user()
@@ -56,6 +56,13 @@ class Student extends Model
     {
         return "{$this->first_name} {$this->middle_name} {$this->last_name}";
     }
-
+    public function getFormattedNameAttribute()
+    {
+        $middleInitial = $this->middle_name
+            ? strtoupper(substr($this->middle_name, 0, 1)) . '.'
+            : '';
+    
+        return trim("{$this->first_name} {$middleInitial} {$this->last_name}");
+    }
 
 }

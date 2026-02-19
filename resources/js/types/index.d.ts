@@ -10,6 +10,7 @@ export interface Playlists {
     hours: number;
     created_at: string;
     lesson_count: number;
+    batches?: Batch[];
 }
 export interface Lesson {
     id: number;
@@ -38,6 +39,19 @@ export interface SubLesson {
     url?: string[];
     created_at?: string;
     updated_at?: string;
+}
+export interface Submission {
+    id: number;
+    sub_lesson_id: number;
+    student_number: string;
+    student: {
+        full_name: string;
+        first_name: string;
+        last_name: string;
+        formatted_name: string;
+    }
+    files?: FileItem[];
+    status: string;
 }
 
 export interface Batch{

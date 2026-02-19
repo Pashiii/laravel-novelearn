@@ -155,7 +155,7 @@ class TutorController extends Controller
             'street' => 'nullable|string|max:100',
             'district' => 'nullable|string|max:100',
 
-            // 'email' => 'required|string|lowercase|email|max:100|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:100|unique:'.User::class,
             'contact_number' => 'required|string|max:13',
             'nationality' => 'required|string|max:100',
             'sex' => 'required|in:male,female',
@@ -196,6 +196,7 @@ class TutorController extends Controller
             'sex' => $validated['sex'],
             'nationality' => $validated['nationality'],
             'image' => $validated['image'],
+            'email' => $validated['email'],
         ]);
   
         $address->update([

@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Lesson;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Playlist;
 use App\Models\User;
+use App\Policies\LessonPolicy;
 use App\Policies\PlaylistPolicy;
 
 class AuthServiceProvider extends ServiceProvider
@@ -17,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Playlist::class => PlaylistPolicy::class,
+        Lesson::class => LessonPolicy::class,
     ];
 
     /**
@@ -26,12 +29,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('deleteAnyPlaylist', function (User $user) {
-            return in_array($user->role, ['admin', 'teacher']);
-        });
-        Gate::define('updateAnyPlaylist', function (User $user) {
-            return in_array($user->role, ['admin', 'teacher']);
-        });
+        // Gate::define('deleteAny', function (User $user) {
+        //     return in_array($user->role, ['admin', 'teacher']);
+        // });
+        // Gate::define('updateAny', function (User $user) {
+        //     return in_array($user->role, ['admin', 'teacher']);
+        // });
 
 
         // You can also define custom gates here if needed:
