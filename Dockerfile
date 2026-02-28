@@ -23,10 +23,25 @@ RUN composer install --no-dev --optimize-autoloader
 # Build frontend (Inertia React)
 RUN npm install && npm run build
 
-# Cache Laravel config
+
+# Generate key if missing
+RUN php artisan key:generate || true
+
+# Run migrations automatically
+RUN php artisan migrate --force || true
+
+# Clear and cache config
+RUN php artisan config:clear || true
+RUN php artisan cache:clear || true
 RUN php artisan config:cache || true
 RUN php artisan route:cache || true
 RUN php artisan view:cache || true
+
+# Storage link
+RUN php artisan storage:link || true
+
+# SEEDER
+RUN php artisan db:seed --force || true
 
 EXPOSE 10000
 
