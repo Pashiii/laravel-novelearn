@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckBatchId;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\RoleMiddleware;
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'role' => RoleMiddleware::class,
+            'check.batch' => CheckBatchId::class,
         ]);
     })
     

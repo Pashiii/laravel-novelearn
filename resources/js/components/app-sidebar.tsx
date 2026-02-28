@@ -18,6 +18,7 @@ import {
     BookUser,
     ClipboardList,
     FileBadge,
+    GraduationCap,
     Keyboard,
     LayoutGrid,
     MessageCircle,
@@ -31,13 +32,25 @@ const allNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
-        roles: ['student', 'admin', 'teacher'],
+        roles: ['admin', 'teacher'],
     },
     {
         title: 'Courses',
         href: '/playlist',
         icon: BookText,
-        roles: ['admin', 'student', 'teacher'],
+        roles: ['admin', 'teacher'],
+    },
+    {
+        title: 'My Progress',
+        href: '/my-progress',
+        icon: BookText,
+        roles: ['student'],
+    },
+    {
+        title: 'Learn',
+        href: '/playlist',
+        icon: GraduationCap,
+        roles: ['student'],
     },
     {
         title: 'My Batch',
@@ -115,7 +128,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href="/" prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

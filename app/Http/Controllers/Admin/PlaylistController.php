@@ -23,7 +23,6 @@ class PlaylistController extends Controller
     {
         $user = Auth::user();
         $playlists = $this->playlistRepository->getPlaylistsForUser($user);
-
         return Inertia::render('Playlist/Index', [
             'playlists' => Inertia::defer(function () use ($playlists) {
                 sleep(1); 

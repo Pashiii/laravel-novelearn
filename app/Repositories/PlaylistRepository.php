@@ -24,8 +24,16 @@ class PlaylistRepository implements PlaylistRepositoryInterface
         return Playlist::findOrFail($id);
     }
     public function getPlaylistsForUser(\App\Models\User $user): Collection{
-        if (in_array($user->role, ['teacher', 'admin'])) {
+        if ($user->role === 'admin') {
             return $this->getAllPlaylistsWithLessonCount();
+        }
+        if ($user->role === 'teacher') {
+            $teacherId = $user->teacher->id;
+
+            return Playlist::with(['batches' => function ($query) use ($teacherId) {
+                $query->where('status', 1)
+                    ->where('tutor_id', $teacherId);
+            }])->get();
         }
     
         $studentNumber = $user->student->student_number;
@@ -36,13 +44,13 @@ class PlaylistRepository implements PlaylistRepositoryInterface
                     $q->where('student_number', $studentNumber);
                 });
         }])
-        // ->whereHas('batches', function ($batchQuery) use ($studentNumber) {
-        //     $batchQuery
-        //         ->where('status', 1) 
-        //         ->whereHas('enrollment', function ($enrollQuery) use ($studentNumber) {
-        //             $enrollQuery->where('student_number', $studentNumber);
-        //         });
-        // })
+        ->whereHas('batches', function ($batchQuery) use ($studentNumber) {
+            $batchQuery
+                ->where('status', 1) 
+                ->whereHas('enrollment', function ($enrollQuery) use ($studentNumber) {
+                    $enrollQuery->where('student_number', $studentNumber);
+                });
+        })
         ->get();
 }
 

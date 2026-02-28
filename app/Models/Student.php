@@ -47,10 +47,18 @@ class Student extends Model
     public function enrollment(){
         return $this->hasMany(Enrollment::class, 'student_number', 'student_number');
     }
+
     public function batches()
-{
-    return $this->belongsToMany(Batch::class, 'enrollment');
-}
+    {
+        return $this->belongsToMany(
+            Batch::class,
+            'enrollments',
+            'student_number', // FK in enrollments (for this model)
+            'batch_number',   // FK in enrollments (for Batch)
+            'student_number', // local key in users
+            'batch_number'    // local key in batches
+        );
+    }
 
     public function getFullNameAttribute()
     {

@@ -1,7 +1,9 @@
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Head, useForm } from '@inertiajs/react';
+import { SharedData } from '@/types';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import {
+    CircleUser,
     MapPin,
     MessageCircleMore,
     MessageSquareText,
@@ -31,6 +33,8 @@ interface WebContentProps {
 }
 
 export default function Website({ web_content }: WebContentProps) {
+    const { auth } = usePage<SharedData>().props;
+
     window.addEventListener('scroll', function () {
         if (this.window.scrollY >= 50) {
             setScrollY(true);
@@ -64,7 +68,7 @@ export default function Website({ web_content }: WebContentProps) {
     };
     return (
         <div>
-            <Head title="Novelearn">
+            <Head title="NoveLearn">
                 <link
                     rel="stylesheet"
                     href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css"
@@ -81,11 +85,11 @@ export default function Website({ web_content }: WebContentProps) {
                             <span
                                 className={`font-semibold ${scrollY ? 'dark:text-white' : ''}`}
                             >
-                                Novelearn
+                                NoveLearn
                             </span>
                         </a>
                         <div
-                            className={`nav_menu bg-[#2D452F] text-white dark:bg-black dark:text-white ${showNav ? 'show-menu right-0' : 'right-[-100%]'}`}
+                            className={`nav_menu dark:bg-black dark:text-white ${showNav ? 'show-menu right-0 bg-[#2D452F]' : 'right-[-100%]'}`}
                         >
                             <ul className="nav_list">
                                 <li>
@@ -111,11 +115,22 @@ export default function Website({ web_content }: WebContentProps) {
                                         Contact Us
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="/login" className="button">
-                                        Login
-                                    </a>
-                                </li>
+                                {auth.user ? (
+                                    <li>
+                                        <a
+                                            href={`${auth.user.role == 'student' ? '/my-progress' : '/dashboard'}`}
+                                            className="nav_link"
+                                        >
+                                            <CircleUser />
+                                        </a>
+                                    </li>
+                                ) : (
+                                    <li>
+                                        <a href="/login" className="button">
+                                            Login
+                                        </a>
+                                    </li>
+                                )}
                             </ul>
 
                             <div className="nav_close" id="nav-close">
@@ -152,10 +167,20 @@ export default function Website({ web_content }: WebContentProps) {
                                 </p>
 
                                 <div className="home_buttons">
-                                    <a href="login.php" className="button">
-                                        {' '}
-                                        Let's get started!
-                                    </a>
+                                    {auth.user ? (
+                                        <a
+                                            href={`${auth.user.role == 'student' ? '/my-progress' : '/dashboard'}`}
+                                            className="button"
+                                        >
+                                            {' '}
+                                            Let's get started!
+                                        </a>
+                                    ) : (
+                                        <a href="/login" className="button">
+                                            {' '}
+                                            Let's get started!
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                             <div className="home_images">

@@ -50,7 +50,7 @@ export const SubLessonCard: React.FC<SubLessonCardProps> = ({
     auth,
     batchId,
 }) => {
-    const isStudent = auth.user?.role === 'student';
+    const isAdmin = auth.user?.role === 'admin';
 
     const SubLessonActions = (
         <>
@@ -77,7 +77,7 @@ export const SubLessonCard: React.FC<SubLessonCardProps> = ({
                     />
                 )}
             </div>
-            {batchId && isStudent ? (
+            {batchId && !isAdmin ? (
                 <Link
                     href={route('sub_lesson.show', {
                         playlist: playlistId,

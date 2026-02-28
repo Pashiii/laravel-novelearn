@@ -17,7 +17,7 @@ class Enrollment extends Model
         return $this->belongsTo(Playlist::class, 'course_id', 'course_id');
     }
 
-    public function batch()
+    public function batches()
     {
         return $this->belongsTo(Batch::class, 'batch_number', 'batch_number');
     }

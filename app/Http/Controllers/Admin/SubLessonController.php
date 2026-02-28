@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Interfaces\SubLessonRepositoryInterface;
+use App\Models\Batch;
 use App\Models\Lesson;
 use App\Models\Playlist;
 use App\Models\SubLesson;
@@ -41,7 +42,13 @@ class SubLessonController extends Controller
         $user = Auth::user();
         $role = $user->role;
         $subLesson = $this->subLessonRepository->findSubLessonById($lesson,$subLesson->id,);
+        
+        if($role === 'student' && !$batchId){
+            return redirect()->route('playlist.index');
+        }
+
         $this->authorize('view', $subLesson);
+
 
         $submission = null;
         $submissions = [];
@@ -51,12 +58,14 @@ class SubLessonController extends Controller
             $submission = Submission::with('files')
                 ->where('student_number', $studentNumber)
                 ->where('sub_lesson_id', $subLesson->id)
+                ->where('batch_id', $batchId)
                 ->first();
         }
 
-        if (in_array($role, ['teacher', 'admin'])) {
+        if (in_array($role, ['teacher'])) {
             $submissions = Submission::with(['files', 'student'])
                 ->where('sub_lesson_id', $subLesson->id)
+                ->where('batch_id', $batchId)
                 ->latest()
                 ->get();
         }

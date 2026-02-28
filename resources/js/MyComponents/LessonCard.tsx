@@ -32,8 +32,7 @@ export const LessonCard: React.FC<LessonCardProps> = ({
     thumbnail,
     auth,
 }) => {
-    const isStudent = auth.user?.role === 'student';
-
+    const isAdmin = auth.user?.role === 'admin';
     const LessonActions = (
         <>
             <div className="grid grid-cols-2 gap-2">
@@ -55,7 +54,7 @@ export const LessonCard: React.FC<LessonCardProps> = ({
                     />
                 )}
             </div>
-            {batchId && isStudent ? (
+            {batchId && !isAdmin ? (
                 <Link
                     href={route('sub_lesson.index', {
                         playlist: playlistId,

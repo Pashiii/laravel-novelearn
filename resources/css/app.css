@@ -99,7 +99,7 @@
     /* OWN ROOT */
     --header-height: 3.5rem;
 
-    --first-color: hsl(18, 95%, 55%);
+    --first-color: #f9611f;
     --second-color: hsl(42, 98%, 52%);
     --first-gradient: linear-gradient(90deg,
                         hsl(18, 95%, 55%),
@@ -261,6 +261,10 @@ html {
     display: flex;
     flex-direction: column;
     row-gap: 4rem;
+}
+
+.nav_link:hover{
+    color: var(--first-color);
 }
 
 .nav_close{

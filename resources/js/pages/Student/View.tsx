@@ -111,13 +111,27 @@ export default function View({ student }: Props) {
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent
-                                        className="w-40"
+                                        className="w-50"
                                         align="end"
                                     >
                                         <DropdownMenuLabel>
                                             Account Actions
                                         </DropdownMenuLabel>
                                         <DropdownMenuGroup>
+                                            <DropdownMenuItem>
+                                                <Link
+                                                    href={route(
+                                                        'student.performance',
+                                                        {
+                                                            student: student?.id
+                                                                ? student.id
+                                                                : 0,
+                                                        },
+                                                    )}
+                                                >
+                                                    Performance Overview
+                                                </Link>
+                                            </DropdownMenuItem>
                                             <DropdownMenuItem>
                                                 <Link
                                                     href={route(

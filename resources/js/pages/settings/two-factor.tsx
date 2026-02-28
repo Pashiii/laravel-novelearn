@@ -106,6 +106,7 @@ export default function TwoFactor({
                                     >
                                         {({ processing }) => (
                                             <Button
+                                                className="bg-green-900 hover:bg-green-800"
                                                 type="submit"
                                                 disabled={processing}
                                             >

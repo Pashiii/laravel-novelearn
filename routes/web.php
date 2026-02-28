@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\TutorController;
 use App\Http\Controllers\Admin\WebContentController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\PSGCController;
 use App\Http\Controllers\Student\BatchController as StudentBatchController;
 use App\Http\Controllers\Student\ShortcutController;
@@ -28,7 +29,7 @@ Route::post('/messages-submit',[MessageController::class, 'store'])->name('messa
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
-    })->name('dashboard');
+    })->name('dashboard')->middleware(['role:admin,teacher']);
 
     //PLAYLIST ROUTES
     Route::get('/playlist', [PlaylistController::class, 'index'])->name('playlist.index');
@@ -51,7 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/sub_lesson', [SubLessonController::class, 'store'])->name('sub_lesson.store');
         Route::match(['put', 'post'],'/sub_lesson/{subLesson}', [SubLessonController::class, 'update'])->name('sub_lesson.update');
         Route::delete('/sub_lesson/{id}', [SubLessonController::class, 'destroy'])->name('sub_lesson.destroy');
-        Route::get('/sub_lesson/{subLesson}/b{batchId?}', [SubLessonController::class, 'show'])->name('sub_lesson.show');
+        Route::get('/sub_lesson/{subLesson}/b{batchId?}', [SubLessonController::class, 'show'])->name('sub_lesson.show')->middleware('check.batch');
     });
 
 
@@ -122,6 +123,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/web-content', [WebContentController::class, 'index'])->name('web-content.index');
         Route::post('/web-content', [WebContentController::class, 'update'])->name('web-content.update');
     });
+
+    //STUDENT PROGRESS
+    Route::get('/my-progress', [ProgressController::class, 'studentProgress'])->name('studentProgress.index');
+    Route::get('/student-performance/{student}', [ProgressController::class, 'studentPerformance'])->name('student.performance')->middleware(['role:admin,teacher']);
 
     //PSGC ROUTES
     Route::prefix('psgc')->group(function () {

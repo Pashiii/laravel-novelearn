@@ -25,6 +25,7 @@ interface PlaylistCardProps {
 const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist, auth }) => {
     const isAdmin = auth.user?.role === 'admin';
     const isStudent = auth.user?.role === 'student';
+    const isTeacher = auth.user?.role === 'teacher';
     const enrolledBatches = playlist.batches ?? [];
 
     const canViewCourse = !isStudent || enrolledBatches.length > 0;
@@ -67,6 +68,7 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist, auth }) => {
                     )}
                 </div>
             )}
+
             {/* Admin "Template" View Button */}
             {isAdmin && (
                 <Link
@@ -75,7 +77,7 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist, auth }) => {
                     })}
                 >
                     <Button className="w-full bg-green-900 text-white">
-                        View Master Template
+                        View Content
                     </Button>
                 </Link>
             )}
@@ -87,6 +89,33 @@ const PlaylistCard: React.FC<PlaylistCardProps> = ({ playlist, auth }) => {
                         View Content
                     </Button>
                 </Link>
+            )}
+            {isTeacher && (
+                <div className="mt-5 flex flex-col gap-2">
+                    <p className="text-xs font-semibold text-gray-500 uppercase">
+                        Your Batches
+                    </p>
+                    {enrolledBatches.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                            {enrolledBatches.map((batch) => (
+                                <Link
+                                    key={batch.id} // Use ID for database lookups
+                                    href={route('lesson.index', {
+                                        playlist: playlist.id,
+                                        batchId: batch.id, // <--- Passing Batch Context
+                                    })}
+                                    className="rounded bg-green-100 px-2 py-1 text-xs text-green-800 transition hover:bg-green-200"
+                                >
+                                    Batch {batch.batch_number}
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <span className="text-xs text-gray-400 italic">
+                            No batch assigned
+                        </span>
+                    )}
+                </div>
             )}
         </>
     );

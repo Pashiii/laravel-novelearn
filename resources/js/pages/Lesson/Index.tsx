@@ -48,7 +48,6 @@ export default function Index({
             href: '/playlist/lesson/id/lesson',
         },
     ];
-    console.log(batchId);
     const { auth } = usePage<{ auth: AuthProps }>().props;
     const isStudent = auth.user?.role == 'student';
     return (

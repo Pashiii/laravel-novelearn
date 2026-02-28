@@ -44,7 +44,9 @@ class AuthenticatedSessionController extends Controller
         Auth::login($user, $request->boolean('remember'));
 
         $request->session()->regenerate();
-
+        if ($user->role == 'student') {
+          return redirect()->intended(route('playlist.index', absolute: false));
+        }
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

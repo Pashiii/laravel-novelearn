@@ -101,10 +101,14 @@ export default function Index({
         id: number;
         action: 'passed' | 'failed';
     } | null>(null);
+
     const [submitted, setSubmitted] = useState(false);
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
+
+    const isAdmin = auth?.user?.role === 'admin';
+
     const { data, setData, post, errors, processing, reset } = useForm<{
         sub_lesson_id: number;
         batch_id: number;
@@ -167,6 +171,7 @@ export default function Index({
             },
         });
     };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="View Content" />
@@ -393,7 +398,7 @@ export default function Index({
                         )}
                 </div>
                 <div className="lg:px-4">
-                    {auth?.user?.role !== 'student' && (
+                    {auth?.user?.role !== 'student' && !isAdmin && (
                         <Card className="flex-shrink flex-grow basis-[40rem]">
                             <CardHeader className="mt-5">
                                 <CardTitle className="text-2xl">
