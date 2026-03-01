@@ -20,29 +20,21 @@ COPY . .
 # Install Laravel deps
 RUN composer install --no-dev --optimize-autoloader
 
-# Build frontend (Inertia React)
+# Build frontend
 RUN npm install && npm run build
 
-
-# Generate key if missing
-RUN php artisan key:generate || true
-
-# Run migrations automatically
-RUN php artisan migrate --force || true
-
-# Clear and cache config
-RUN php artisan config:clear || true
-RUN php artisan cache:clear || true
-RUN php artisan config:cache || true
-RUN php artisan route:cache || true
-RUN php artisan view:cache || true
-
-# Storage link
-RUN php artisan storage:link || true
-
-# SEEDER
-RUN php artisan db:seed --force || true
+# Fix permissions
+RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# 🔥 RUN EVERYTHING HERE (NOT IN BUILD)
+CMD php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache && \
+    php artisan storage:link && \
+    php artisan migrate --force && \
+    php artisan db:seed --force && \
+    php artisan serve --host=0.0.0.0 --port=10000

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('course_id');
             $table->string('batch_number')->unique();
-            $table->foreignId('tutor_id')->constrained('tutors');
             $table->string('course_title');
             $table->json('schedule');
             $table->time('start_time');

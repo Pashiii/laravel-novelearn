@@ -369,7 +369,7 @@ export default function Website({ web_content }: WebContentProps) {
                                 </p>
                                 <div className="map">
                                     <iframe
-                                        src={web_content.map_url}
+                                        src={web_content?.map_url}
                                         width="600"
                                         height="450"
                                         loading="lazy"
