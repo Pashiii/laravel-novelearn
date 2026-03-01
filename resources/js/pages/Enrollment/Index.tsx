@@ -187,8 +187,11 @@ export default function Index({ students, batches }: Props) {
                                     <Button
                                         className="w-40 bg-green-900 text-white hover:bg-green-800"
                                         type="submit"
+                                        disabled={processing}
                                     >
-                                        Enroll Now
+                                        {processing
+                                            ? 'Enrolling...'
+                                            : 'Enroll Now'}
                                     </Button>
                                     <Link href={route('student.index')}>
                                         <Button

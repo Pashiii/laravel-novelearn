@@ -59,7 +59,7 @@ interface Props {
 }
 
 export default function Update({ student }: Props) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, reset } = useForm({
         _method: 'PUT',
         first_name: '',
         middle_name: '',

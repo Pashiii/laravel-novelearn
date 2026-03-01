@@ -39,7 +39,7 @@ export const DeleteAlert: React.FC<Props> = ({
     const { delete: destroy } = useForm();
 
     const handleDelete = (id: number) => {
-        destroy(route(routeName, params ?? { id: data.id }), {
+        destroy(route(routeName, params ?? { id: id }), {
             onSuccess: () => {
                 toast.success('Deleted successfully!');
             },

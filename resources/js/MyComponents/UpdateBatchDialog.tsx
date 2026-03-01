@@ -39,6 +39,7 @@ export const UpdateBatchDialog = ({ batch, playlists, tutors }: Props) => {
     const scheduleArray = Array.isArray(batch.schedule)
         ? batch.schedule
         : JSON.parse(batch.schedule || '[]');
+
     const { data, setData, put, processing, reset, errors } = useForm<{
         course_id: string;
         batch_number: string;
@@ -72,7 +73,7 @@ export const UpdateBatchDialog = ({ batch, playlists, tutors }: Props) => {
                 status: batch.status ? 'active' : 'deactive',
             });
         }
-    }, [batch, setData]);
+    }, [batch, setData, scheduleArray]);
 
     const closeButtonRef = useRef<HTMLButtonElement>(null);
 

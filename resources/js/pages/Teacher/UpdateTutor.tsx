@@ -48,7 +48,7 @@ interface Props {
     };
 }
 export default function UpdateTutor({ teacher }: Props) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, reset } = useForm({
         _method: 'PUT',
         first_name: '',
         middle_name: '',
@@ -109,10 +109,6 @@ export default function UpdateTutor({ teacher }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Teachers" />
-            {Object.keys(errors).length > 0 &&
-                Object.entries(errors).map(([message, field]) => (
-                    <div>{field}</div>
-                ))}
             <div className="mx-auto w-full max-w-4xl">
                 <div className="m-5">
                     <Card>
@@ -124,11 +120,7 @@ export default function UpdateTutor({ teacher }: Props) {
 
                         <CardContent>
                             <form onSubmit={handleSubmit}>
-                                <FormBase
-                                    data={data}
-                                    setData={setData}
-                                    edit={true}
-                                />
+                                <FormBase data={data} setData={setData} />
                                 {/* File Upload */}
                                 <div className="mt-6">
                                     <Label>Upload 1x1 Photo</Label>
@@ -149,8 +141,11 @@ export default function UpdateTutor({ teacher }: Props) {
                                     <Button
                                         className="w-40 bg-green-900 text-white hover:bg-green-800"
                                         type="submit"
+                                        disabled={processing}
                                     >
-                                        Update Now
+                                        {processing
+                                            ? 'Updating...'
+                                            : 'Update Now'}
                                     </Button>
                                     <Link
                                         href={route('teacher.show', {

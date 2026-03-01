@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 import { Batch, Playlists } from '@/types';
 import { useForm } from '@inertiajs/react';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
@@ -70,15 +70,15 @@ export const CreateBatchDialog = ({ batches, playlists, tutors }: Props) => {
         });
     };
 
-    const generateBatchNumber = () => {
+    const generateBatchNumber = useCallback(() => {
         const year = new Date();
         const numberBatch = batches.length + 1;
         const batchNumber = year.getFullYear() + '-' + numberBatch;
         setData('batch_number', batchNumber);
-    };
+    }, []);
     useEffect(() => {
         generateBatchNumber();
-    }, []);
+    }, [generateBatchNumber]);
 
     function errorClass(field: any) {
         return errors[field] && !(data as any)[field] ? 'border-red-600' : '';

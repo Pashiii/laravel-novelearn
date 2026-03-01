@@ -62,7 +62,6 @@ interface Props {
         birth_city: string;
         image: File | null;
     }>;
-    edit?: boolean;
 }
 
 interface PSGC {
@@ -70,7 +69,7 @@ interface PSGC {
     code: string;
 }
 
-export const FormBase = ({ data, setData, edit = false }: Props) => {
+export const FormBase = ({ data, setData }: Props) => {
     const [date, setDate] = useState<Date>();
     const [regions, setRegions] = useState<PSGC[]>([]);
     const [provinces, setProvinces] = useState<PSGC[]>([]);

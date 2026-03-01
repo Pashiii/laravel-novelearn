@@ -6,7 +6,7 @@ interface Props {
 }
 
 const ShortcutPreview = ({ file_path, onClose }: Props) => {
-    const ext = file_path?.split('.').pop()?.toLowerCase() ?? '';
+    // const ext = file_path?.split('.').pop()?.toLowerCase() ?? '';
 
     if (!file_path) {
         return (

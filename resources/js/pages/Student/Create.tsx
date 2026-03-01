@@ -14,7 +14,7 @@ import AppLayout from '@/layouts/app-layout';
 import { FormBase } from '@/MyComponents/FormBase';
 import { Batch, type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
@@ -33,8 +33,38 @@ interface Props {
     students: {}[];
 }
 
+type StudentProps = {
+    first_name: string;
+    middle_name: string;
+    last_name: string;
+    region: string;
+    province: string;
+    city: string;
+    barangay: string;
+    street: string;
+    district: string;
+    email: string;
+    contact_number: string;
+    nationality: string;
+    sex: string;
+    civil_status: string;
+    date_of_birth: string;
+    birth_region: string;
+    birth_province: string;
+    birth_city: string;
+    education: string[];
+    employment: string;
+    guardian_name: string;
+    guardian_address: string;
+    batch_number: string;
+    course_title: string;
+    course_id: string;
+    student_number: string;
+    image: File | null;
+};
+
 export default function Create({ batches, students }: Props) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, reset } = useForm<StudentProps>({
         first_name: '',
         middle_name: '',
         last_name: '',
@@ -83,18 +113,18 @@ export default function Create({ batches, students }: Props) {
                 : [...data.education, value],
         );
     };
-    const generateStudentNumber = () => {
+    const generateStudentNumber = useCallback(() => {
         const date = new Date();
         const getYear = date.getFullYear();
         const getMonth = date.getMonth() + 1;
 
         const student = students.length + 1;
-        return `SN${getYear}${getMonth}${student}`;
-    };
+        setData('student_number', `SN${getYear}${getMonth}${student}`);
+    }, [students]);
 
     useEffect(() => {
-        setData('student_number', generateStudentNumber());
-    }, []);
+        generateStudentNumber();
+    }, [generateStudentNumber]);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Students" />

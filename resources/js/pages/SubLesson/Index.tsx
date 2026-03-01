@@ -109,7 +109,7 @@ export default function Index({
 
     const isAdmin = auth?.user?.role === 'admin';
 
-    const { data, setData, post, errors, processing, reset } = useForm<{
+    const { data, setData, post, processing, reset } = useForm<{
         sub_lesson_id: number;
         batch_id: number;
         assessment: string;
@@ -378,7 +378,7 @@ export default function Index({
                                         </label>
                                         {submitted ? (
                                             <Button
-                                                disabled
+                                                disabled={processing}
                                                 className="my-2 w-full bg-green-900 text-sm"
                                                 type="button"
                                             >

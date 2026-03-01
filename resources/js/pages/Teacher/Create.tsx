@@ -21,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Create() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, reset } = useForm({
         first_name: '',
         middle_name: '',
         last_name: '',
@@ -84,8 +84,14 @@ export default function Create() {
 
                                 {/* Buttons */}
                                 <div className="mt-8 flex justify-center gap-4">
-                                    <Button className="w-40 bg-green-900 text-white hover:bg-green-800">
-                                        Register Now
+                                    <Button
+                                        className="w-40 bg-green-900 text-white hover:bg-green-800"
+                                        type="submit"
+                                        disabled={processing}
+                                    >
+                                        {processing
+                                            ? 'Registering...'
+                                            : 'Register Now'}
                                     </Button>
                                     <Link href={route('teacher.index')}>
                                         <Button

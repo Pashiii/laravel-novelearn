@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from '@inertiajs/react';
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { route } from 'ziggy-js';
 
@@ -43,16 +43,16 @@ export const CreatePlaylistDialog = ({ setIsOpen, isOpen }: Props) => {
         });
     };
 
-    const generateCourseId = () => {
+    const generateCourseId = useCallback(() => {
         const id = crypto.randomUUID();
         const short = id.replace(/-/g, '').slice(0, 14);
         const courseID = 'CRS-' + short;
         setData('course_id', courseID);
-    };
+    }, []);
 
     useEffect(() => {
         generateCourseId();
-    }, [isOpen]);
+    }, [isOpen, generateCourseId]);
     return (
         <Dialog onOpenChange={setIsOpen} open={isOpen}>
             <DialogContent>

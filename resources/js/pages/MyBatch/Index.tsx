@@ -22,19 +22,6 @@ interface PageProps {
     batches: Batch[];
 }
 
-interface AuthProps {
-    user: {
-        id: number;
-        name: string;
-        role: string;
-    } | null;
-    can: {
-        createPlaylist: boolean;
-        deletePlaylist: boolean;
-        updatePlaylist: boolean;
-    };
-}
-
 export default function Index({ batches }: PageProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

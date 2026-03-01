@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const UserProfileSkeleton = ({ student }: Props) => {
-    const placeholders = [{ column: 3, row: 2 }];
+    // const placeholders = [{ column: 3, row: 2 }];
     return (
         <div className="mx-auto w-full max-w-6xl">
             <div className="m-5">
