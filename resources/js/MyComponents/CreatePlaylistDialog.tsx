@@ -48,7 +48,7 @@ export const CreatePlaylistDialog = ({ setIsOpen, isOpen }: Props) => {
         const short = id.replace(/-/g, '').slice(0, 14);
         const courseID = 'CRS-' + short;
         setData('course_id', courseID);
-    }, []);
+    }, [setData]);
 
     useEffect(() => {
         generateCourseId();

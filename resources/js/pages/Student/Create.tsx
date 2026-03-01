@@ -120,7 +120,7 @@ export default function Create({ batches, students }: Props) {
 
         const student = students.length + 1;
         setData('student_number', `SN${getYear}${getMonth}${student}`);
-    }, [students]);
+    }, [setData, students]);
 
     useEffect(() => {
         generateStudentNumber();

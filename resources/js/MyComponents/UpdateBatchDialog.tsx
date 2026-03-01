@@ -79,7 +79,6 @@ export const UpdateBatchDialog = ({ batch, playlists, tutors }: Props) => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(data);
         put(
             route('batch.update', {
                 batch: batch.id,

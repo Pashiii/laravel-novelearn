@@ -29,7 +29,7 @@ Route::post('/messages-submit',[MessageController::class, 'store'])->name('messa
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
-    })->name('dashboard')->middleware(['role:admin,teacher']);
+    })->name('dashboard')->middleware(['auth', 'verified', 'role:admin']);
 
     //PLAYLIST ROUTES
     Route::get('/playlist', [PlaylistController::class, 'index'])->name('playlist.index');

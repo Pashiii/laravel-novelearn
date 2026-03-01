@@ -75,7 +75,7 @@ export const CreateBatchDialog = ({ batches, playlists, tutors }: Props) => {
         const numberBatch = batches.length + 1;
         const batchNumber = year.getFullYear() + '-' + numberBatch;
         setData('batch_number', batchNumber);
-    }, []);
+    }, [batches, setData]);
     useEffect(() => {
         generateBatchNumber();
     }, [generateBatchNumber]);
