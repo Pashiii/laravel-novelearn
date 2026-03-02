@@ -30,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 interface Props {
     batches: Batch[];
-    students: {}[];
+    students: object[];
 }
 
 interface StudentForm {
@@ -91,7 +91,6 @@ export default function Create({ batches, students }: Props) {
         course_title: '',
         course_id: '',
         student_number: '',
-
         image: null as File | null,
     });
 
