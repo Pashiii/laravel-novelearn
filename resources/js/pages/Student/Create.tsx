@@ -33,7 +33,7 @@ interface Props {
     students: {}[];
 }
 
-type StudentProps = {
+interface StudentForm {
     first_name: string;
     middle_name: string;
     last_name: string;
@@ -61,10 +61,10 @@ type StudentProps = {
     course_id: string;
     student_number: string;
     image: File | null;
-};
+}
 
 export default function Create({ batches, students }: Props) {
-    const { data, setData, post, processing, reset } = useForm<StudentProps>({
+    const { data, setData, post, processing, reset } = useForm<StudentForm>({
         first_name: '',
         middle_name: '',
         last_name: '',

@@ -35,32 +35,34 @@ interface Props {
     }[];
 }
 
+interface BatchForm {
+    course_id: string;
+    batch_number: string;
+    course_title?: string;
+    tutor_id: string;
+    schedule: string[];
+    start_time: string;
+    end_time: string;
+    status: string;
+}
+
 export const CreateBatchDialog = ({ batches, playlists, tutors }: Props) => {
-    const { data, setData, post, processing, reset, errors } = useForm<{
-        course_id: string;
-        batch_number: string;
-        course_title?: string;
-        tutor_id: string;
-        schedule: string[];
-        start_time: string;
-        end_time: string;
-        status: string;
-    }>({
-        course_id: '',
-        batch_number: '',
-        course_title: '',
-        tutor_id: '',
-        schedule: [],
-        start_time: '',
-        end_time: '',
-        status: '',
-    });
+    const { data, setData, post, processing, reset, errors } =
+        useForm<BatchForm>({
+            course_id: '',
+            batch_number: '',
+            course_title: '',
+            tutor_id: '',
+            schedule: [],
+            start_time: '',
+            end_time: '',
+            status: '',
+        });
 
     const closeButtonRef = useRef<HTMLButtonElement>(null);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(data);
         post(route('batch.store'), {
             onSuccess: () => {
                 reset();
@@ -80,14 +82,14 @@ export const CreateBatchDialog = ({ batches, playlists, tutors }: Props) => {
         generateBatchNumber();
     }, [generateBatchNumber]);
 
-    function errorClass(field: any) {
-        return errors[field] && !(data as any)[field] ? 'border-red-600' : '';
+    function errorClass(field: keyof BatchForm) {
+        return errors[field] && !data[field] ? 'border-red-600' : '';
     }
 
-    function errorMessage(field: any) {
+    function errorMessage(field: keyof BatchForm) {
         return (
             errors[field] &&
-            !(data as any)[field] && (
+            !data[field] && (
                 <p className="text-sm text-red-600">{errors[field]}</p>
             )
         );

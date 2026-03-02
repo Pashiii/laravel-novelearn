@@ -35,30 +35,33 @@ interface Props {
     batch: Batch;
 }
 
+interface BatchForm {
+    course_id: string;
+    batch_number: string;
+    course_title?: string;
+    tutor_id: string;
+    schedule: string[];
+    start_time: string;
+    end_time: string;
+    status: string;
+}
+
 export const UpdateBatchDialog = ({ batch, playlists, tutors }: Props) => {
     const scheduleArray = Array.isArray(batch.schedule)
         ? batch.schedule
         : JSON.parse(batch.schedule || '[]');
 
-    const { data, setData, put, processing, reset, errors } = useForm<{
-        course_id: string;
-        batch_number: string;
-        course_title: string;
-        tutor_id: string;
-        schedule: string[];
-        start_time: string;
-        end_time: string;
-        status: string;
-    }>({
-        course_id: '',
-        batch_number: '',
-        course_title: '',
-        tutor_id: '',
-        schedule: [],
-        start_time: '',
-        end_time: '',
-        status: '',
-    });
+    const { data, setData, put, processing, reset, errors } =
+        useForm<BatchForm>({
+            course_id: '',
+            batch_number: '',
+            course_title: '',
+            tutor_id: '',
+            schedule: [],
+            start_time: '',
+            end_time: '',
+            status: '',
+        });
 
     useEffect(() => {
         if (batch) {
@@ -102,14 +105,14 @@ export const UpdateBatchDialog = ({ batch, playlists, tutors }: Props) => {
         );
     };
 
-    function errorClass(field: any) {
-        return errors[field] && !(data as any)[field] ? 'border-red-600' : '';
+    function errorClass(field: keyof BatchForm) {
+        return errors[field] && !data[field] ? 'border-red-600' : '';
     }
 
-    function errorMessage(field: any) {
+    function errorMessage(field: keyof BatchForm) {
         return (
             errors[field] &&
-            !(data as any)[field] && (
+            !data[field] && (
                 <p className="text-sm text-red-600">{errors[field]}</p>
             )
         );

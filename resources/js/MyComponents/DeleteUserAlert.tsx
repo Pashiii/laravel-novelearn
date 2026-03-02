@@ -21,7 +21,7 @@ interface DataProps {
 interface Props {
     data: DataProps;
     routeName: string;
-    params?: Record<string, any>;
+    params?: Record<string, string | number | boolean | undefined>;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     open: boolean;
 }
@@ -36,7 +36,8 @@ export const DeleteUserAlert: React.FC<Props> = ({
     const { delete: destroy } = useForm();
 
     const handleDelete = (id: number) => {
-        destroy(route(routeName, params ?? { id }), {
+        const routeParams = params ?? { id };
+        destroy(route(routeName, routeParams), {
             onSuccess: () => {
                 toast.success('Deleted successfully!');
                 setOpen(false);
